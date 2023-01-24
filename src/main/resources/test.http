@@ -1,0 +1,65 @@
+ POST http://localhost:8080/account/register
+Content-Type: application/json
+
+{
+  "number": "number",
+  "email": "email",
+  "password": "password"
+}
+
+###
+POST http://localhost:8080/account/password/reset
+Content-Type:  application/json
+
+{
+"email": "email"
+}
+
+###
+POST http://localhost:8080/code/send
+Content-Type: application/json
+
+{
+  "email": "email"
+}
+
+###
+POST http://localhost:8080/code/verify
+Content-Type: application/json
+
+{
+  "email": "email",
+  "code": code
+}
+
+###
+POST http://localhost:8080/account/login
+Content-Type: application/json
+
+{
+"email": "ziomki@yandex.ru",
+"password": "ilya123zvezda"
+}
+
+
+
+
+###
+POST http://localhost:8080/account/change/password
+Authorization:  Bearer
+Content-Type: application/json
+
+{
+  "password": "passwrod"
+}
+
+###
+POST http://localhost:8080/account/change
+Authorization:  Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwLyIsImlkIjoyLCJleHAiOjE2NzQ2NDc3NDJ9.IZ0X9YPM9SLwTIUFsxnWtThA23W4E2G8JVqMCG4IvqE
+Content-Type: application/json
+
+{
+  "email": "email",
+  "number": "number",
+  "password": "passwprd"
+}
