@@ -12,12 +12,7 @@
 * Перед тем, как нажать кнопку зарегестрироваться, пользователь должен выслать код на почту *
 * Примерное расположение *
 
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8" />
-  <title></title> />
-</head>
+
 <body>
 <form>
 	<fieldset>
@@ -32,4 +27,3 @@
 	</fieldset>
 </form>
 </body>
-</html>
