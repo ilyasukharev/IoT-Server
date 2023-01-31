@@ -1,0 +1,28 @@
+[2023-01-31 11:22:44]:127.0.0.1 - Attempt to reset password
+[2023-01-31 11:22:44]:127.0.0.1 - User not found
+[2023-01-31 11:22:52]:127.0.0.1 - Attempt to reset password
+[2023-01-31 11:22:53]:127.0.0.1 - Data has been accepted
+[2023-01-31 11:23:11]:127.0.0.1 - Attempt to reset password
+[2023-01-31 11:23:11]:127.0.0.1 - User not found
+[2023-01-31 11:23:46]:127.0.0.1 - Attempt to reset password
+[2023-01-31 11:23:47]:127.0.0.1 - Code is wrong
+[2023-01-31 11:24:12]:127.0.0.1 - Attempt to send verify code
+[2023-01-31 11:24:14]:127.0.0.1 - Sending email with verify code
+[2023-01-31 11:24:22]:127.0.0.1 - Code is right
+[2023-01-31 11:24:29]:127.0.0.1 - Attempt to reset password
+[2023-01-31 11:24:29]:127.0.0.1 - Data has been accepted
+[2023-01-31 11:26:44]:ID:1 - Attempt to change password
+[2023-01-31 11:26:45]:ID:1 - User id was not found
+[2023-01-31 11:27:40]:127.0.0.1 - Attempt to send verify code
+[2023-01-31 11:27:41]:127.0.0.1 - Sending email with verify code
+[2023-01-31 11:27:47]:127.0.0.1 - Code is right
+[2023-01-31 11:27:51]:127.0.0.1 - Attempt to register
+[2023-01-31 11:27:51]:127.0.0.1 - Successfully registered
+[2023-01-31 11:28:04]:127.0.0.1 - Attempt to send verify code
+[2023-01-31 11:28:05]:127.0.0.1 - Sending email with verify code
+[2023-01-31 11:28:06]:127.0.0.1 - Code is wrong
+[2023-01-31 11:28:15]:127.0.0.1 - Code is right
+[2023-01-31 11:28:30]:127.0.0.1 - Attempt to reset password
+[2023-01-31 11:28:30]:127.0.0.1 - Data has been accepted
+[2023-01-31 11:29:14]:ID:2 - Attempt to change password
+[2023-01-31 11:29:14]:ID:2 - Password was successfully changed

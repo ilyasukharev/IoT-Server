@@ -10,6 +10,8 @@ import com.iotserv.dao.users_devices.UserDevice
 import com.iotserv.dao.users_devices.UserDeviceImpl
 import com.iotserv.utils.JwtCooker
 import com.iotserv.utils.JwtCookerImpl
+import com.iotserv.utils.logger.FileLogger
+import com.iotserv.utils.logger.Logger
 import io.github.crackthecodeabhi.kreds.connection.Endpoint
 import io.github.crackthecodeabhi.kreds.connection.newClient
 import io.ktor.server.application.*
@@ -21,13 +23,13 @@ import org.koin.logger.slf4jLogger
 fun Application.configureKoin() {
 
     val koinModule = module {
-        single  {environment}
         single { newClient(Endpoint.from(environment.config.property("databases.redis.endpoint").getString())) }
         single<JwtCooker>{JwtCookerImpl()}
         single<PersonalDataManagement> { PersonalDataManagementIMPL() }
         single<DeviceDefinitionManagement> { DeviceDefinitionManagementImpl() }
         single<DeviceStructure> { DeviceStructureIMPL() }
         single<UserDevice> { UserDeviceImpl() }
+        single<Logger> { FileLogger(environment.config.property("logger.filePath").getString()) }
     }
 
     install(Koin) {

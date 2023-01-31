@@ -10,7 +10,6 @@ data class SocketConnectionResponseData(
 
 @Serializable
 data class ControlDeviceData(
-    val id: ULong,
     val deviceName: String,
     val deviceDescription: String,
     val sensorsList: List<String>,

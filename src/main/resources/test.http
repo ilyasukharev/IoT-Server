@@ -1,26 +1,9 @@
- POST http://localhost:8080/account/register
-Content-Type: application/json
-
-{
-  "number": "number",
-  "email": "email",
-  "password": "password"
-}
-
-###
-POST http://localhost:8080/account/password/reset
-Content-Type:  application/json
-
-{
-"email": "email"
-}
-
 ###
 POST http://localhost:8080/code/send
 Content-Type: application/json
 
 {
-  "email": "email"
+  "email": "ziomki@yandex.ru"
 }
 
 ###
@@ -28,8 +11,18 @@ POST http://localhost:8080/code/verify
 Content-Type: application/json
 
 {
-  "email": "email",
-  "code": code
+  "email": "ziomki@yandex.ru",
+  "code": 349996
+}
+
+###
+POST http://localhost:8080/account/register
+Content-Type: application/json
+
+{
+  "number": "89517236852",
+  "email": "ziomki@yandex.ru",
+  "password": "Ilya123321"
 }
 
 ###
@@ -37,20 +30,26 @@ POST http://localhost:8080/account/login
 Content-Type: application/json
 
 {
-"email": "ziomki@yandex.ru",
-"password": "ilya123zvezda"
+  "email": "ziomki@yandex.ru",
+  "password": "Ilya123321"
 }
 
 
+###
+POST http://localhost:8080/account/password/reset
+Content-Type:  application/json
 
+{
+"email": "ziomki@yandex.ru"
+}
 
 ###
 POST http://localhost:8080/account/change/password
-Authorization:  Bearer
+Authorization:  Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwLyIsImlkIjoyLCJleHAiOjE2NzUyNDAxMTB9.Y8WYDw6xdKo36EJtiI-dT-RbfR1jnE-m4sFDRgRH3ag
 Content-Type: application/json
 
 {
-  "password": "passwrod"
+  "password": "Ilya321321"
 }
 
 ###

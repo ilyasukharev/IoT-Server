@@ -8,7 +8,7 @@ import io.ktor.server.application.*
 fun Application.configureRouting() {
     routing {
         authorizationRoutes()
-        personalRoutes()
+        personalDataRoutes()
         verificationCodeRoutes()
         connectionRoutes()
     }

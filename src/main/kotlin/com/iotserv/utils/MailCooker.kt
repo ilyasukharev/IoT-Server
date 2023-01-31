@@ -1,25 +1,25 @@
 package com.iotserv.utils
 
-import io.ktor.server.application.*
+import com.typesafe.config.ConfigFactory
+import io.ktor.server.config.*
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.SimpleEmail
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+object MailCooker {
+    private val config = HoconApplicationConfig(ConfigFactory.load())
 
-object MailCooker : KoinComponent{
-    private val env by inject<ApplicationEnvironment>()
+    private val hostProp = config.property("mail.hostname").getString()
+    private val smtpPortProp = config.property("mail.smtpport").getString().toInt()
+    private val userNameProp = config.property("mail.login").getString()
+    private val isSSLOnConnectProp = config.property("mail.isSSLOnConnect").getString().toBoolean()
+    private val userPasswordProp = config.property("mail.password").getString()
+    private val messageTitle = config.property("mail.messageTitle").getString()
+    private val messagePatternProp = config.property("mail.messagePattern").getString()
+    private val baseEmail = config.property("mail.baseEmail").getString()
+    private val exceptionMessageTitle = "To Admins. Exceptions!"
 
     fun generateRandomCode() : Int = (111111..999999).random()
 
     fun sendResetEmail(email: String, code: Int) {
-        val hostProp = env.config.property("mail.hostname").getString()
-        val smtpPortProp = env.config.property("mail.smtpport").getString().toInt()
-        val userNameProp = env.config.property("mail.login").getString()
-        val isSSLOnConnectProp = env.config.property("mail.isSSLOnConnect").getString().toBoolean()
-        val userPasswordProp = env.config.property("mail.password").getString()
-        val messageTitle = env.config.property("mail.messageTitle").getString()
-        val messagePatternProp = env.config.property("mail.messagePattern").getString()
-
         SimpleEmail().apply {
             this.hostName = hostProp
             this.setSmtpPort(smtpPortProp)
@@ -29,6 +29,20 @@ object MailCooker : KoinComponent{
             this.subject = messageTitle
             this.setMsg(String.format(messagePatternProp, code))
             this.addTo(email)
+            this.send()
+        }
+    }
+
+    fun sendMessageWithServerWarnings(reason: String?) {
+        SimpleEmail().apply {
+            this.hostName = hostProp
+            this.setSmtpPort(smtpPortProp)
+            this.setAuthenticator(DefaultAuthenticator(userNameProp, userPasswordProp))
+            this.isSSLOnConnect = isSSLOnConnectProp
+            this.setFrom(userNameProp)
+            this.subject = exceptionMessageTitle
+            this.setMsg(reason)
+            this.addTo(baseEmail)
             this.send()
         }
     }

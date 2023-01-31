@@ -4,26 +4,26 @@ import com.iotserv.dao.device_definition.DeviceDefinitionTable
 import com.iotserv.dao.device_structure.DeviceStructureTable
 import com.iotserv.dao.personal_data.PersonalDataTable
 import com.iotserv.dao.users_devices.UserDevicesTable
+import com.typesafe.config.ConfigFactory
 import io.ktor.server.application.*
+import io.ktor.server.config.*
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 
-object DatabaseFactory : KoinComponent{
-    private val environment by inject<ApplicationEnvironment>()
+object DatabaseFactory{
+    private val config = HoconApplicationConfig(ConfigFactory.load())
 
     fun initPostgreSQL() {
         val defaultPropertyUrl = "databases.postgres"
 
-        val url = environment.config.property("$defaultPropertyUrl.url").getString()
-        val driver = environment.config.property("$defaultPropertyUrl.driver").getString()
-        val login = environment.config.property("$defaultPropertyUrl.login").getString()
-        val password = environment.config.property("$defaultPropertyUrl.password").getString()
+        val url = config.property("$defaultPropertyUrl.url").getString()
+        val driver = config.property("$defaultPropertyUrl.driver").getString()
+        val login = config.property("$defaultPropertyUrl.login").getString()
+        val password = config.property("$defaultPropertyUrl.password").getString()
 
 
         val database = Database.connect(url, driver = driver, user = login, password = password)

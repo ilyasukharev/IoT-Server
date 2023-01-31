@@ -11,25 +11,20 @@ fun Application.configureValidator() {
         validate<RegistrationData> {
             validateRegistrationData(it)
         }
-
         validate <LoginData> {
             validateLoginData(it)
         }
-
-        validate<EmailData> {
-            validateEmailData(it)
-        }
-
-        validate<VerifyCodeData> {
-            validateVerificationCode(it)
-        }
-
         validate<PasswordData> {
             validatePasswordData(it)
         }
-
         validate<PersonalData> {
             validatePersonalData(it)
+        }
+        validate<EmailData> {
+            validateEmailData(it)
+        }
+        validate<VerifyCodeData> {
+            validateVerificationCode(it)
         }
     }
 }

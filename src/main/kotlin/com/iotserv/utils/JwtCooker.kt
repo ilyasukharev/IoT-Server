@@ -3,10 +3,9 @@ package com.iotserv.utils
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import io.ktor.server.application.*
+import com.typesafe.config.ConfigFactory
 import io.ktor.server.auth.jwt.*
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import io.ktor.server.config.*
 import java.util.*
 
 interface JwtCooker {
@@ -15,13 +14,12 @@ interface JwtCooker {
     fun validate(jwtCredential: JWTCredential) : JWTPrincipal
 }
 
-class JwtCookerImpl : JwtCooker, KoinComponent {
+class JwtCookerImpl : JwtCooker {
+    private val config = HoconApplicationConfig(ConfigFactory.load())
 
-    private val environment by inject<ApplicationEnvironment>()
-
-    private val audience = environment.config.property("jwt.audience").getString()
-    private val issuer = environment.config.property("jwt.issuer").getString()
-    private val secret = environment.config.property("jwt.secret").getString()
+    private val audience = config.property("jwt.audience").getString()
+    private val issuer = config.property("jwt.issuer").getString()
+    private val secret = config.property("jwt.secret").getString()
     private val tokenDuration: Long = 86400000    //24hours
 
 
