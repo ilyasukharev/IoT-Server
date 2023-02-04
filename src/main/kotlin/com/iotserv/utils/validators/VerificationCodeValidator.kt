@@ -7,8 +7,8 @@ import com.iotserv.utils.RoutesResponses.incorrectCodeFormat
 import io.ktor.server.plugins.requestvalidation.*
 
 fun validateVerificationCode(data: VerifyCodeData): ValidationResult {
-   if (data.code.toString().length != 6)
-       return ValidationResult.Invalid(RoutesResponses.incorrectCodeLength)
+    if (data.code.toString().length != 6)
+        return ValidationResult.Invalid(RoutesResponses.incorrectCodeLength)
 
     data.code.toString().forEach {
         if (!Character.isDigit(it)) {

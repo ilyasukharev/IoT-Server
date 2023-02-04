@@ -24,7 +24,7 @@ fun Application.configureKoin() {
 
     val koinModule = module {
         single { newClient(Endpoint.from(environment.config.property("databases.redis.endpoint").getString())) }
-        single<JwtCooker>{JwtCookerImpl()}
+        single<JwtCooker> { JwtCookerImpl() }
         single<PersonalDataManagement> { PersonalDataManagementIMPL() }
         single<DeviceDefinitionManagement> { DeviceDefinitionManagementImpl() }
         single<DeviceStructure> { DeviceStructureIMPL() }

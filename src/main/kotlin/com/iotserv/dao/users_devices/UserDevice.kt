@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.select
 interface UserDevice {
     suspend fun isExists(userId: ULong, deviceId: ULong): Boolean
     suspend fun saveNewDevice(data: UserDeviceData): Boolean
+    suspend fun isBoardIdExists(boardId: String): Boolean
 }
 
 class UserDeviceImpl : UserDevice {
@@ -24,7 +25,14 @@ class UserDeviceImpl : UserDevice {
             it[userId] = data.userId
             it[deviceId] = data.deviceId
             it[state] = data.state
+            it[boardId] = data.boardId
         }.resultedValues != null
+    }
+
+    override suspend fun isBoardIdExists(boardId: String): Boolean = dbQuery {
+        UserDevicesTable.slice(UserDevicesTable.boardId).select {
+            UserDevicesTable.boardId eq boardId
+        }.limit(1).singleOrNull() != null
     }
 
 }

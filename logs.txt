@@ -1,28 +1,46 @@
-[2023-01-31 11:22:44]:127.0.0.1 - Attempt to reset password
-[2023-01-31 11:22:44]:127.0.0.1 - User not found
-[2023-01-31 11:22:52]:127.0.0.1 - Attempt to reset password
-[2023-01-31 11:22:53]:127.0.0.1 - Data has been accepted
-[2023-01-31 11:23:11]:127.0.0.1 - Attempt to reset password
-[2023-01-31 11:23:11]:127.0.0.1 - User not found
-[2023-01-31 11:23:46]:127.0.0.1 - Attempt to reset password
-[2023-01-31 11:23:47]:127.0.0.1 - Code is wrong
-[2023-01-31 11:24:12]:127.0.0.1 - Attempt to send verify code
-[2023-01-31 11:24:14]:127.0.0.1 - Sending email with verify code
-[2023-01-31 11:24:22]:127.0.0.1 - Code is right
-[2023-01-31 11:24:29]:127.0.0.1 - Attempt to reset password
-[2023-01-31 11:24:29]:127.0.0.1 - Data has been accepted
-[2023-01-31 11:26:44]:ID:1 - Attempt to change password
-[2023-01-31 11:26:45]:ID:1 - User id was not found
-[2023-01-31 11:27:40]:127.0.0.1 - Attempt to send verify code
-[2023-01-31 11:27:41]:127.0.0.1 - Sending email with verify code
-[2023-01-31 11:27:47]:127.0.0.1 - Code is right
-[2023-01-31 11:27:51]:127.0.0.1 - Attempt to register
-[2023-01-31 11:27:51]:127.0.0.1 - Successfully registered
-[2023-01-31 11:28:04]:127.0.0.1 - Attempt to send verify code
-[2023-01-31 11:28:05]:127.0.0.1 - Sending email with verify code
-[2023-01-31 11:28:06]:127.0.0.1 - Code is wrong
-[2023-01-31 11:28:15]:127.0.0.1 - Code is right
-[2023-01-31 11:28:30]:127.0.0.1 - Attempt to reset password
-[2023-01-31 11:28:30]:127.0.0.1 - Data has been accepted
-[2023-01-31 11:29:14]:ID:2 - Attempt to change password
-[2023-01-31 11:29:14]:ID:2 - Password was successfully changed
+[2023-02-03 14:08:08]:ID:1 - Client connected
+[2023-02-03 14:08:12]:ID:1 - Sending board id accepted
+[2023-02-03 14:08:14]:ID:1 - Board id successfully received
+[2023-02-03 14:08:14]:ID:1 - Attempt to connect two sides
+[2023-02-03 14:08:15]:ID:1 - Board was found
+[2023-02-03 14:08:15]:BOARD:192.168.0.104 - Successfully board connection
+[2023-02-03 14:08:22]:BOARD:192.168.0.104 - Sending board id accepted
+[2023-02-03 14:08:23]:BOARD:192.168.0.104 - Board id successfully received
+[2023-02-03 14:08:23]:BOARD:192.168.0.104 - Sending settings accepted
+[2023-02-03 14:08:24]:BOARD:192.168.0.104 - Settings successfully received
+[2023-02-03 14:08:25]:BOARD:192.168.0.104 - Data were successfully wrote
+[2023-02-04 12:20:12]:DESKTOP-E6KSMUA - Attempt to send verify code
+[2023-02-04 12:20:14]:DESKTOP-E6KSMUA - Sending email with verify code
+[2023-02-04 12:20:28]:DESKTOP-E6KSMUA - Code is right
+[2023-02-04 12:20:32]:DESKTOP-E6KSMUA - Attempt to register
+[2023-02-04 12:20:33]:DESKTOP-E6KSMUA - Successfully registered
+[2023-02-04 12:22:07]:ID:1 - Client connected
+[2023-02-04 12:26:25]:ID:1 - Sending board id accepted
+[2023-02-04 12:26:27]:ID:1 - Board id successfully received
+[2023-02-04 12:26:27]:ID:1 - Attempt to connect two sides
+[2023-02-04 12:26:39]:BOARD:192.168.0.104 - Board connected
+[2023-02-04 12:26:39]:BOARD:192.168.0.104 - Sending board id accepted
+[2023-02-04 12:26:40]:BOARD:192.168.0.104 - Board id successfully received
+[2023-02-04 12:26:40]:BOARD:192.168.0.104 - Attempt to connect two sides
+[2023-02-04 12:26:41]:ID:1 - Board was found
+[2023-02-04 12:26:41]:BOARD:192.168.0.104 - Successfully board connection
+[2023-02-04 12:26:48]:BOARD:192.168.0.104 - Sending board id accepted
+[2023-02-04 12:26:49]:BOARD:192.168.0.104 - Board id successfully received
+[2023-02-04 12:26:49]:BOARD:192.168.0.104 - Sending settings accepted
+[2023-02-04 12:26:50]:BOARD:192.168.0.104 - Settings successfully received
+[2023-02-04 12:26:51]:BOARD:192.168.0.104 - Flushing device sensors
+[2023-02-04 12:26:52]:BOARD:192.168.0.104 - Data were successfully wrote
+[2023-02-04 12:27:10]:BOARD:192.168.0.104 - Board connected
+[2023-02-04 12:27:10]:BOARD:192.168.0.104 - Sending board id accepted
+[2023-02-04 12:27:11]:BOARD:192.168.0.104 - Board id successfully received
+[2023-02-04 12:27:11]:BOARD:192.168.0.104 - Attempt to connect two sides
+[2023-02-04 12:27:30]:ID:1 - Sending board id accepted
+[2023-02-04 12:27:33]:ID:1 - Board id successfully received
+[2023-02-04 12:27:33]:ID:1 - Attempt to connect two sides
+[2023-02-04 12:27:34]:ID:1 - Board was found
+[2023-02-04 12:27:35]:BOARD:192.168.0.104 - Successfully board connection
+[2023-02-04 12:27:41]:BOARD:192.168.0.104 - Sending board id accepted
+[2023-02-04 12:27:42]:BOARD:192.168.0.104 - Board id successfully received
+[2023-02-04 12:27:42]:BOARD:192.168.0.104 - Sending settings accepted
+[2023-02-04 12:27:43]:BOARD:192.168.0.104 - Settings successfully received
+[2023-02-04 12:27:44]:BOARD:192.168.0.104 - Such device id already registered

@@ -4,6 +4,7 @@ import com.typesafe.config.ConfigFactory
 import io.ktor.server.config.*
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.SimpleEmail
+
 object MailCooker {
     private val config = HoconApplicationConfig(ConfigFactory.load())
 
@@ -17,7 +18,7 @@ object MailCooker {
     private val baseEmail = config.property("mail.baseEmail").getString()
     private val exceptionMessageTitle = "To Admins. Exceptions!"
 
-    fun generateRandomCode() : Int = (111111..999999).random()
+    fun generateRandomCode(): Int = (111111..999999).random()
 
     fun sendResetEmail(email: String, code: Int) {
         SimpleEmail().apply {

@@ -9,9 +9,9 @@ import io.ktor.server.config.*
 import java.util.*
 
 interface JwtCooker {
-    fun buildToken(id: Long) : String
-    fun verifyToken() : JWTVerifier
-    fun validate(jwtCredential: JWTCredential) : JWTPrincipal
+    fun buildToken(id: Long): String
+    fun verifyToken(): JWTVerifier
+    fun validate(jwtCredential: JWTCredential): JWTPrincipal
 }
 
 class JwtCookerImpl : JwtCooker {

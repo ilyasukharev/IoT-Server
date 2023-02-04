@@ -4,7 +4,7 @@ import com.iotserv.dto.*
 import com.iotserv.utils.RoutesResponses
 import io.ktor.server.plugins.requestvalidation.*
 
-fun validateRegistrationData(data: RegistrationData) : ValidationResult {
+fun validateRegistrationData(data: RegistrationData): ValidationResult {
     if (data.number.length < 11 || data.number.length > 11) {
         return ValidationResult.Invalid(RoutesResponses.incorrectNumberLength)
     }
@@ -26,7 +26,7 @@ fun validateRegistrationData(data: RegistrationData) : ValidationResult {
     return ValidationResult.Valid
 }
 
-fun validateLoginData(data: LoginData) : ValidationResult {
+fun validateLoginData(data: LoginData): ValidationResult {
     isEmailAvailable(data.email)?.let {
         return ValidationResult.Invalid(it)
     }

@@ -11,7 +11,6 @@ import com.iotserv.utils.RoutesResponses.successfullyRegistered
 import com.iotserv.utils.RoutesResponses.userAlreadyExists
 import com.iotserv.utils.RoutesResponses.userHasNotBeenAdded
 import com.iotserv.utils.RoutesResponses.userNotFoundOrPasswordIsIncorrect
-import com.iotserv.utils.logger.FileLogger
 import com.iotserv.utils.logger.Logger
 import com.iotserv.utils.logger.SenderType
 import io.github.crackthecodeabhi.kreds.connection.KredsClient
@@ -32,6 +31,7 @@ suspend fun isClientAuthenticated(redis: KredsClient, email: String): Boolean {
         }
     }
 }
+
 fun Route.authorizationRoutes() {
     val jwtCooker by inject<JwtCooker>()
     val personalDataManagementDao by inject<PersonalDataManagement>()
@@ -52,29 +52,32 @@ fun Route.authorizationRoutes() {
                 } else {
                     if (!isClientAuthenticated(kredsClient, data.email)) {
                         logger.writeLog(codeIsWrongOrNotVerified, clientIp, SenderType.IP_ADDRESS)
-                        return@post call.respond(HttpStatusCode.Unauthorized, AuthorizationResponseData(codeIsWrongOrNotVerified))
+                        return@post call.respond(
+                            HttpStatusCode.Unauthorized,
+                            AuthorizationResponseData(codeIsWrongOrNotVerified)
+                        )
                     }
 
                     personalDataManagementDao.writeNewUser(
                         RegistrationData(data.number, data.email, data.password)
-                    )?.let {userId->
+                    )?.let { userId ->
                         call.respond(
                             HttpStatusCode.Accepted,
                             AuthorizationResponseData(successfullyRegistered, jwtCooker.buildToken(userId.toLong()))
                         )
                         logger.writeLog(successfullyRegistered, clientIp, SenderType.IP_ADDRESS)
-                        return@post
 
-                    } ?: call.respond(AuthorizationResponseData(userHasNotBeenAdded))
-
-                    logger.writeLog(userHasNotBeenAdded, clientIp, SenderType.IP_ADDRESS)
+                    } ?: run {
+                        call.respond(AuthorizationResponseData(userHasNotBeenAdded))
+                        logger.writeLog(userHasNotBeenAdded, clientIp, SenderType.IP_ADDRESS)
+                    }
                 }
             }
         }
 
         route("/login") {
             post {
-                val data= call.receive<LoginData>()
+                val data = call.receive<LoginData>()
                 val clientIp = call.request.origin.remoteHost
                 logger.writeLog(attemptToLogin, clientIp, SenderType.IP_ADDRESS)
 
@@ -84,10 +87,13 @@ fun Route.authorizationRoutes() {
                         AuthorizationResponseData(authorizationHasBeenCompleted, jwtCooker.buildToken(it.toLong()))
                     )
                     logger.writeLog(authorizationHasBeenCompleted, clientIp, SenderType.IP_ADDRESS)
-                    return@post
-                } ?: call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(userNotFoundOrPasswordIsIncorrect))
-
-                logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
+                } ?: run {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        AuthorizationResponseData(userNotFoundOrPasswordIsIncorrect)
+                    )
+                    logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
+                }
             }
         }
 

@@ -9,6 +9,16 @@ data class SocketConnectionResponseData(
 )
 
 @Serializable
+data class BoardConnectionData (
+    val boardIdentificationData: BoardIdentificationData? = null,
+    val controlDeviceData: ControlDeviceData? = null,
+)
+@Serializable
+data class BoardIdentificationData(
+    val boardUUID: String
+)
+
+@Serializable
 data class ControlDeviceData(
     val deviceName: String,
     val deviceDescription: String,
@@ -32,4 +42,5 @@ data class UserDeviceData(
     val userId: ULong,
     val deviceId: ULong,
     val state: String,
+    val boardId: String
 )

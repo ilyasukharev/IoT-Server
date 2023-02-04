@@ -1,5 +1,5 @@
 ###
-POST http://localhost:8080/code/send
+POST http://192.168.0.107:8080/code/send
 Content-Type: application/json
 
 {
@@ -7,16 +7,16 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/code/verify
+POST http://192.168.0.107:8080/code/verify
 Content-Type: application/json
 
 {
   "email": "ziomki@yandex.ru",
-  "code": 349996
+  "code": 826823
 }
 
 ###
-POST http://localhost:8080/account/register
+POST http://192.168.0.107:8080/account/register
 Content-Type: application/json
 
 {
@@ -26,12 +26,12 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/account/login
+POST http://192.168.0.105:8080/account/login
 Content-Type: application/json
 
 {
   "email": "ziomki@yandex.ru",
-  "password": "Ilya123321"
+  "password": "Ilya321321"
 }
 
 

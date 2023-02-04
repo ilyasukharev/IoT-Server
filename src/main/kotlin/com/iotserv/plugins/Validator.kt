@@ -11,7 +11,7 @@ fun Application.configureValidator() {
         validate<RegistrationData> {
             validateRegistrationData(it)
         }
-        validate <LoginData> {
+        validate<LoginData> {
             validateLoginData(it)
         }
         validate<PasswordData> {

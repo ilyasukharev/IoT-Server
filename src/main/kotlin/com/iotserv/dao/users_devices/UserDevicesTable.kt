@@ -7,6 +7,7 @@ object UserDevicesTable : Table("user_devices") {
     val userId = ulong("user_id")
     val deviceId = ulong("device_id")
     val state = varchar("device_state", length = 255)
+    val boardId = varchar("board_id", length = 40)
 
     override val primaryKey = PrimaryKey(noteId)
 }

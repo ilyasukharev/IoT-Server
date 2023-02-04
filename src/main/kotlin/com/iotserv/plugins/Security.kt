@@ -11,13 +11,13 @@ import org.koin.ktor.ext.inject
 fun Application.configureSecurity() {
     val jwtCooker by inject<JwtCooker>()
 
-    install (Authentication) {
+    install(Authentication) {
         jwt("desktop-app") {
             verifier(jwtCooker.verifyToken())
-            validate {jwtCooker.validate(it)}
+            validate { jwtCooker.validate(it) }
 
 
-            challenge { _,_ ->
+            challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }

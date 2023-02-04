@@ -8,7 +8,6 @@ import com.iotserv.utils.RoutesResponses.codeIsWrong
 import com.iotserv.utils.RoutesResponses.connectionTimeWasUp
 import com.iotserv.utils.RoutesResponses.sendingEmailWithVerifyCode
 import com.iotserv.utils.RoutesResponses.verifyCodeWasSent
-import com.iotserv.utils.logger.FileLogger
 import com.iotserv.utils.logger.Logger
 import com.iotserv.utils.logger.SenderType
 import io.github.crackthecodeabhi.kreds.connection.KredsClient
@@ -53,26 +52,25 @@ fun Route.verificationCodeRoutes() {
             val data = call.receive<VerifyCodeData>()
             val clientIp = call.request.origin.remoteHost
 
-            kredsClient.use{redis->
+            kredsClient.use { redis ->
                 redis.get("${data.email}:verificationCode")
-            }?.let {rightCode->
+            }?.let { rightCode ->
                 if (rightCode.toInt() == data.code) {
-                    kredsClient.use {redis->
+                    kredsClient.use { redis ->
                         redis.del("${data.email}:verificationCode")
                         redis.set("${data.email}:authorization", "true")
                         redis.expire("${data.email}:authorization", 1000U)
                     }
                     logger.writeLog(codeIsRight, clientIp, SenderType.IP_ADDRESS)
                     call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(codeIsRight))
-                }
-                else {
+                } else {
                     logger.writeLog(codeIsWrong, clientIp, SenderType.IP_ADDRESS)
                     call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(codeIsWrong))
                 }
-                return@post
-            } ?: call.respond(HttpStatusCode.NotFound, AuthorizationResponseData(connectionTimeWasUp))
-
-            logger.writeLog(connectionTimeWasUp, clientIp, SenderType.IP_ADDRESS)
+            } ?: run {
+                call.respond(HttpStatusCode.NotFound, AuthorizationResponseData(connectionTimeWasUp))
+                logger.writeLog(connectionTimeWasUp, clientIp, SenderType.IP_ADDRESS)
+            }
         }
     }
 }

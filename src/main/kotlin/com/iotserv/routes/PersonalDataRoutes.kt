@@ -14,7 +14,6 @@ import com.iotserv.utils.RoutesResponses.dataWasSuccessfullyChanged
 import com.iotserv.utils.RoutesResponses.passwordWasSuccessfullyChanged
 import com.iotserv.utils.RoutesResponses.userIdWasNotFound
 import com.iotserv.utils.RoutesResponses.userNotFound
-import com.iotserv.utils.logger.FileLogger
 import com.iotserv.utils.logger.Logger
 import com.iotserv.utils.logger.SenderType
 import io.github.crackthecodeabhi.kreds.connection.KredsClient
@@ -47,21 +46,22 @@ fun Route.personalDataRoutes() {
 
                         if (!personalDataManagementDao.updatePassword(id.toULong(), data)) {
                             logger.writeLog(userIdWasNotFound, "$id", SenderType.ID)
-                            return@post call.respond(HttpStatusCode.InternalServerError, PersonalResponseData(userIdWasNotFound))
+                            call.respond(HttpStatusCode.InternalServerError, PersonalResponseData(userIdWasNotFound))
                         } else {
                             logger.writeLog(passwordWasSuccessfullyChanged, "$id", SenderType.ID)
-                            return@post call.respond(
+                            call.respond(
                                 HttpStatusCode.Accepted,
                                 PersonalResponseData(passwordWasSuccessfullyChanged, jwtCooker.buildToken(id))
                             )
                         }
 
-                    } ?: call.respond(
-                        HttpStatusCode.NonAuthoritativeInformation,
-                        PersonalResponseData(authorizationError)
-                    )
-
-                    logger.writeLog(authorizationError, clientIp, SenderType.IP_ADDRESS)
+                    } ?: run {
+                        call.respond(
+                            HttpStatusCode.NonAuthoritativeInformation,
+                            PersonalResponseData(authorizationError)
+                        )
+                        logger.writeLog(authorizationError, clientIp, SenderType.IP_ADDRESS)
+                    }
                 }
                 post {
                     val data = call.receive<PersonalData>()
@@ -81,25 +81,25 @@ fun Route.personalDataRoutes() {
 
                         if (!personalDataManagementDao.updateAll(id.toULong(), data)) {
                             logger.writeLog(userIdWasNotFound, "$id", SenderType.ID)
-                            return@post call.respond(
+                            call.respond(
                                 HttpStatusCode.InternalServerError,
                                 PersonalResponseData(userIdWasNotFound, jwtCooker.buildToken(id))
                             )
                         } else {
                             logger.writeLog(dataWasSuccessfullyChanged, "$id", SenderType.ID)
-                            return@post call.respond(
+                            call.respond(
                                 HttpStatusCode.Accepted,
                                 PersonalResponseData(dataWasSuccessfullyChanged, jwtCooker.buildToken(id))
                             )
                         }
 
-                    } ?: call.respond(
-                        HttpStatusCode.NonAuthoritativeInformation,
-                        PersonalResponseData(authorizationError)
-                    )
-
-                    logger.writeLog(authorizationError, clientIp, SenderType.IP_ADDRESS)
-
+                    } ?: run {
+                        call.respond(
+                            HttpStatusCode.NonAuthoritativeInformation,
+                            PersonalResponseData(authorizationError)
+                        )
+                        logger.writeLog(authorizationError, clientIp, SenderType.IP_ADDRESS)
+                    }
                 }
             }
         }
@@ -118,19 +118,22 @@ fun Route.personalDataRoutes() {
 
             if (!isClientAuthenticated(kredsClient, data.email)) {
                 logger.writeLog(codeIsWrong, clientIp, SenderType.IP_ADDRESS)
-                return@post call.respond(HttpStatusCode.Unauthorized, AuthorizationResponseData(codeIsWrongOrNotVerified))
+                return@post call.respond(
+                    HttpStatusCode.Unauthorized,
+                    AuthorizationResponseData(codeIsWrongOrNotVerified)
+                )
             }
 
-            personalDataManagementDao.getId(data)?.let{userId->
+            personalDataManagementDao.getId(data)?.let { userId ->
+                logger.writeLog(dataHasBeenAccepted, clientIp, SenderType.IP_ADDRESS)
                 call.respond(
                     HttpStatusCode.Accepted,
                     AuthorizationResponseData(dataHasBeenAccepted, jwtCooker.buildToken(userId.toLong()))
                 )
-                logger.writeLog(dataHasBeenAccepted, clientIp, SenderType.IP_ADDRESS)
-                return@post
-            } ?: call.respond(HttpStatusCode.InternalServerError, AuthorizationResponseData(userIdWasNotFound))
-
-            logger.writeLog(userIdWasNotFound, clientIp, SenderType.IP_ADDRESS)
+            } ?: run {
+                logger.writeLog(userIdWasNotFound, clientIp, SenderType.IP_ADDRESS)
+                call.respond(HttpStatusCode.InternalServerError, AuthorizationResponseData(userIdWasNotFound))
+            }
         }
     }
 }

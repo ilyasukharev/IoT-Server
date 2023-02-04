@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-object DatabaseFactory{
+object DatabaseFactory {
     private val config = HoconApplicationConfig(ConfigFactory.load())
 
     fun initPostgreSQL() {
