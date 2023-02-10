@@ -38,6 +38,7 @@ data class DeviceStructureData(
     val sensorStateType: String,
 )
 
+
 data class UserDeviceData(
     val userId: ULong,
     val deviceId: ULong,

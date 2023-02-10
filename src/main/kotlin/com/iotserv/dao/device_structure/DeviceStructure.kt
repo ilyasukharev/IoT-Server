@@ -9,6 +9,7 @@ interface DeviceStructure {
     suspend fun isSensorExists(deviceId: ULong, sensorName: String): Boolean
     suspend fun addSensor(data: DeviceStructureData): Boolean
     suspend fun flushAll(deviceId: ULong): Boolean
+    suspend fun getSensorType(deviceId: ULong, sensorName: String): String?
 }
 
 class DeviceStructureIMPL : DeviceStructure {
@@ -29,9 +30,15 @@ class DeviceStructureIMPL : DeviceStructure {
 
     override suspend fun flushAll(deviceId: ULong): Boolean = dbQuery {
         while(true) {
-            if (DeviceStructureTable.deleteWhere {id eq deviceId } <= 0) break;
+            if (DeviceStructureTable.deleteWhere {id eq deviceId } <= 0) break
         }
         true
+    }
+
+    override suspend fun getSensorType(deviceId: ULong, sensorName: String): String? = dbQuery {
+        DeviceStructureTable.select {
+            (DeviceStructureTable.id eq deviceId) and (DeviceStructureTable.sensorName eq sensorName)
+        }.limit(1).singleOrNull()?.let {it[DeviceStructureTable.sensorStateType]}
     }
 
 }

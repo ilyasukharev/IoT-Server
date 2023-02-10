@@ -44,3 +44,35 @@
 [2023-02-04 12:27:42]:BOARD:192.168.0.104 - Sending settings accepted
 [2023-02-04 12:27:43]:BOARD:192.168.0.104 - Settings successfully received
 [2023-02-04 12:27:44]:BOARD:192.168.0.104 - Such device id already registered
+[2023-02-04 15:14:32]:DESKTOP-E6KSMUA - Attempt to login
+[2023-02-04 15:14:32]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-04 15:17:40]:DESKTOP-E6KSMUA - Attempt to login
+[2023-02-04 15:17:41]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-08 10:46:31]:DESKTOP-E6KSMUA - Attempt to login
+[2023-02-08 10:46:31]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-08 10:46:56]:ID:1 - List is empty
+[2023-02-08 10:47:36]:ID:1 - List was arrived
+[2023-02-08 10:53:20]:ID:1 - List was arrived
+[2023-02-10 16:42:16]:DESKTOP-E6KSMUA - Attempt to login
+[2023-02-10 16:42:18]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-10 16:44:56]:ID:1 - Id is not found
+[2023-02-10 16:45:01]:ID:1 - List was arrived
+[2023-02-10 16:47:55]:ID:1 - List was arrived
+[2023-02-10 16:48:40]:ID:1 - List was arrived
+[2023-02-10 17:06:58]:ID:1 - Client has not such device
+[2023-02-10 17:07:07]:ID:1 - Sensor is not exists
+[2023-02-10 17:09:23]:ID:1 - Type of sensor state is not correct
+[2023-02-10 17:10:10]:ID:1 - Type of sensor state is not correct
+[2023-02-10 17:47:41]:ID:1 - Device state has been updated
+[2023-02-10 17:49:23]:ID:1 - Device state has been updated
+[2023-02-10 21:28:54]:ID:1 - Device data was sent
+[2023-02-10 21:29:05]:ID:1 - Device data was sent
+[2023-02-10 21:29:10]:ID:1 - Client has not such device
+[2023-02-10 21:29:14]:ID:1 - Device data was sent
+[2023-02-10 21:38:35]:ID:1 - Device data was sent
+[2023-02-10 21:38:40]:ID:1 - Device data was sent
+[2023-02-10 21:39:00]:ID:1 - Sensor is not exists
+[2023-02-10 21:39:41]:ID:1 - Sensor is not exists
+[2023-02-10 21:39:46]:ID:1 - Device state has been updated
+[2023-02-10 21:39:57]:ID:1 - Sensor is not exists
+[2023-02-10 21:40:42]:ID:1 - Device state has been updated

@@ -12,7 +12,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.koin.ktor.ext.inject
 
-fun Route.boardManagement() {
+fun Route.boardManagementRoutes() {
     val logger by inject<Logger>()
     val userDeviceDao by inject<UserDevice>()
 
@@ -23,6 +23,7 @@ fun Route.boardManagement() {
                 val boardUUID = receiveJsonData(this, true, logger, ip, null).boardIdentificationData!!.boardUUID
 
                 if (!userDeviceDao.isBoardIdExists(boardUUID)) {
+                    logger.writeLog(boardIdWasNotFound, ip, SenderType.IP_ADDRESS_BOARD)
                     send(boardIdWasNotFound)
                 }
 

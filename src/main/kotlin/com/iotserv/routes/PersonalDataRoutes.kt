@@ -54,7 +54,6 @@ fun Route.personalDataRoutes() {
                                 PersonalResponseData(passwordWasSuccessfullyChanged, jwtCooker.buildToken(id))
                             )
                         }
-
                     } ?: run {
                         call.respond(
                             HttpStatusCode.NonAuthoritativeInformation,
@@ -69,13 +68,15 @@ fun Route.personalDataRoutes() {
 
                     call.principal<JWTPrincipal>()?.payload?.let { payload ->
                         val id = payload.getClaim("id").asLong()
+                        val token = jwtCooker.buildToken(id)
+
                         logger.writeLog(attemptToChangePersonalData, "$id", SenderType.ID)
 
                         if (!isClientAuthenticated(kredsClient, data.email)) {
                             logger.writeLog(codeIsWrongOrNotVerified, "$id", SenderType.ID)
                             return@post call.respond(
                                 HttpStatusCode.Unauthorized,
-                                PersonalResponseData(codeIsWrongOrNotVerified, jwtCooker.buildToken(id))
+                                PersonalResponseData(codeIsWrongOrNotVerified, token)
                             )
                         }
 
@@ -83,13 +84,13 @@ fun Route.personalDataRoutes() {
                             logger.writeLog(userIdWasNotFound, "$id", SenderType.ID)
                             call.respond(
                                 HttpStatusCode.InternalServerError,
-                                PersonalResponseData(userIdWasNotFound, jwtCooker.buildToken(id))
+                                PersonalResponseData(userIdWasNotFound, token)
                             )
                         } else {
                             logger.writeLog(dataWasSuccessfullyChanged, "$id", SenderType.ID)
                             call.respond(
                                 HttpStatusCode.Accepted,
-                                PersonalResponseData(dataWasSuccessfullyChanged, jwtCooker.buildToken(id))
+                                PersonalResponseData(dataWasSuccessfullyChanged, token)
                             )
                         }
 

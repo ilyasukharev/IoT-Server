@@ -22,7 +22,7 @@ fun Application.configureStatusPages() {
             MailCooker.sendMessageWithServerWarnings(cause.message.toString())
             call.respondText(status = HttpStatusCode.InternalServerError, text = redisIsNotConnect)
         }
-        exception<BadRequestException> { call, cause ->
+        exception<NumberFormatException> {call, cause ->
             call.respondText(status = HttpStatusCode.BadRequest, text = cause.message.toString())
         }
     }

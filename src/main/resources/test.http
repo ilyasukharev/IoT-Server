@@ -26,12 +26,31 @@ Content-Type: application/json
 }
 
 ###
-POST http://192.168.0.105:8080/account/login
+POST http://192.168.0.104:8080/account/login
 Content-Type: application/json
 
 {
   "email": "ziomki@yandex.ru",
-  "password": "Ilya321321"
+  "password": "Ilya123321"
+}
+
+###
+GET http://192.168.0.104:8080/management/user/sensors
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNDo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA0OjgwODAvIiwiaWQiOjEsImV4cCI6MTY3NjEyMjkzOH0.AtI2iir3atNVP-cpZXjbMNWmWCKBt1ZEBaHLDbgTq3E
+
+###
+GET http://192.168.0.104:8080/management/user/sensors/1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNDo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA0OjgwODAvIiwiaWQiOjEsImV4cCI6MTY3NjEyMjkzOH0.AtI2iir3atNVP-cpZXjbMNWmWCKBt1ZEBaHLDbgTq3E
+
+###
+POST http://192.168.0.104:8080/management/user/sensors/change
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNDo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA0OjgwODAvIiwiaWQiOjEsImV4cCI6MTY3NjEyMjkzOH0.AtI2iir3atNVP-cpZXjbMNWmWCKBt1ZEBaHLDbgTq3E
+Content-Type: application/json
+
+{
+  "deviceId": 1,
+  "sensor": "hollDown",
+  "state": "true"
 }
 
 

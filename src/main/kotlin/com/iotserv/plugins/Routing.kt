@@ -11,6 +11,7 @@ fun Application.configureRouting() {
         personalDataRoutes()
         verificationCodeRoutes()
         connectionRoutes()
-        boardManagement()
+        clientManagementRoutes()
+        boardManagementRoutes()
     }
 }

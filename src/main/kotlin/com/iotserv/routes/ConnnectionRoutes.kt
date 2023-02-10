@@ -241,12 +241,9 @@ fun Route.connectionRoutes() {
                                 return@collect
                             }
 
-                            val state = DeviceSensorsHandler.serialize(data.sensorsList, data.statesTypesList)
+                            val state = DeviceSensorsHandler.serializeWithDefaultValues(data.sensorsList, data.statesTypesList)
 
-                            if (!userDeviceDao.saveNewDevice(
-                                    UserDeviceData(userId.toULong(), deviceId, state, boardUUID)
-                                )
-                            ) {
+                            if (!userDeviceDao.saveNewDevice(UserDeviceData(userId.toULong(), deviceId, state, boardUUID))) {
                                 logger.writeLog(deviceHasNotBeenAdded, ip, SenderType.IP_ADDRESS_BOARD)
                                 send(deviceHasNotBeenAddedToUserBase)
                                 return@collect
