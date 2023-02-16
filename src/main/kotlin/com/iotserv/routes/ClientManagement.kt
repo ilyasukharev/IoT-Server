@@ -9,16 +9,14 @@ import com.iotserv.dto.CommonDeviceData
 import com.iotserv.dto.DetailsDeviceData
 import com.iotserv.utils.DeviceSensorsHandler.deserializeToMap
 import com.iotserv.utils.DeviceSensorsHandler.getUpdateState
-import com.iotserv.utils.JwtCooker
 import com.iotserv.utils.RoutesResponses.authorizationError
 import com.iotserv.utils.RoutesResponses.clientHasNotSuchDevice
 import com.iotserv.utils.RoutesResponses.deviceDataWasSent
 import com.iotserv.utils.RoutesResponses.deviceStateHasBeenUpdated
 import com.iotserv.utils.RoutesResponses.deviceStateWasNotBeenUpdated
 import com.iotserv.utils.RoutesResponses.deviceWasNotFound
-import com.iotserv.utils.RoutesResponses.idIsNotFound
 import com.iotserv.utils.RoutesResponses.listIsEmpty
-import com.iotserv.utils.RoutesResponses.listWasArrived
+import com.iotserv.utils.RoutesResponses.listWasSent
 import com.iotserv.utils.RoutesResponses.sensorIsNotExists
 import com.iotserv.utils.RoutesResponses.typeOfSensorStateIsNotCorrect
 import com.iotserv.utils.logger.Logger
@@ -38,7 +36,6 @@ fun Route.clientManagementRoutes() {
     val logger by inject<Logger>()
     val userDeviceDao by inject<UserDevice>()
     val deviceStructureDao by inject<DeviceStructure>()
-    val jwtCooker by inject<JwtCooker>()
     val deviceDefinitionDao by inject<DeviceDefinitionManagement>()
     val kredsClient by inject<KredsClient>()
 
@@ -48,27 +45,23 @@ fun Route.clientManagementRoutes() {
                 get {
                     call.principal<JWTPrincipal>()?.payload?.let { payload ->
                         val id = payload.getClaim("id").asLong()
-                        val token = jwtCooker.buildToken(id)
 
-                        userDeviceDao.getAll(id.toULong()).let {list ->
-                            if (list.isEmpty()) {
-                                call.respond(HttpStatusCode.InternalServerError, ClientManagementResponseData(listIsEmpty, token = token))
+                        userDeviceDao.getAll(id.toULong()).let {userDevices ->
+                            if (userDevices.isEmpty()) {
                                 logger.writeLog(listIsEmpty, "$id", SenderType.ID)
-                                return@get
+                                return@get call.respond(HttpStatusCode.OK, ClientManagementResponseData(listIsEmpty))
                             }
-                            val deviceDefinitionsList = mutableListOf<CommonDeviceData>()
 
-                            repeat (list.size) {
-                                val deviceInfo = deviceDefinitionDao.getDeviceInfo(list[it].deviceId) ?: run {
-                                    call.respond(HttpStatusCode.InternalServerError, ClientManagementResponseData(deviceWasNotFound, token = token))
+                            userDevices.map {
+                                val deviceInfo = deviceDefinitionDao.getDeviceInfo(it.deviceId) ?: run {
                                     logger.writeLog(deviceWasNotFound, "$id", SenderType.ID)
-                                    return@get
+                                    return@get call.respond(HttpStatusCode.InternalServerError, ClientManagementResponseData(deviceWasNotFound))
                                 }
-                                deviceDefinitionsList.add (CommonDeviceData(list[it].deviceId, deviceInfo.deviceName, deviceInfo.deviceDescription))
+                                CommonDeviceData(it.deviceId, deviceInfo.deviceName, deviceInfo.deviceDescription)
+                            }.let { commonDevicesDataList ->
+                                logger.writeLog(listWasSent, "$id", SenderType.ID)
+                                call.respond(HttpStatusCode.OK, ClientManagementResponseData(listWasSent, deviceListInfo = commonDevicesDataList))
                             }
-
-                            call.respond(HttpStatusCode.OK, ClientManagementResponseData(listWasArrived, deviceListInfo = deviceDefinitionsList, token = token))
-                            logger.writeLog(listWasArrived, "$id", SenderType.ID)
                         }
 
                     } ?: run {
@@ -76,35 +69,28 @@ fun Route.clientManagementRoutes() {
                         logger.writeLog(authorizationError, call.request.origin.remoteHost, SenderType.IP_ADDRESS)
                     }
                 }
-                get("/{id?}") {
-                    val deviceId = call.parameters["id"]?.toULong() ?: run {
-                        call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(idIsNotFound))
-                        logger.writeLog(idIsNotFound, call.request.local.remoteHost, SenderType.ID)
-                        return@get
-                    }
+                get("/{id}") {
+                    val deviceId = call.parameters["id"]!!.toULong()
 
                     call.principal<JWTPrincipal>()?.payload?.let { payload ->
                         val userId = payload.getClaim("id").asLong()
-                        val token = jwtCooker.buildToken(userId)
 
-                        if (!userDeviceDao.isExists(userId.toULong(), deviceId)) {
-                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(clientHasNotSuchDevice, token = token))
-                            logger.writeLog(clientHasNotSuchDevice, "$userId", SenderType.ID)
-                            return@get
-                        }
-
-                        if (!deviceDefinitionDao.isExists(deviceId)) {
-                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(deviceWasNotFound, token = token))
+                        val deviceDefinition = deviceDefinitionDao.getDeviceInfo(deviceId) ?: run {
+                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(deviceWasNotFound))
                             logger.writeLog(deviceWasNotFound, "$userId", SenderType.ID)
                             return@get
                         }
 
-                        val state = userDeviceDao.get(deviceId)!!.state
-                        val deviceDefinition = deviceDefinitionDao.getDeviceInfo(deviceId)!!
+                        val state = userDeviceDao.get(deviceId)?.state ?: run {
+                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(clientHasNotSuchDevice))
+                            logger.writeLog(clientHasNotSuchDevice, "$userId", SenderType.ID)
+                            return@get
+                        }
+
                         val sensorStates = deserializeToMap(state)
 
                         DetailsDeviceData(deviceId, deviceDefinition.deviceName, sensorStates).let {data ->
-                            call.respond(HttpStatusCode.OK, ClientManagementResponseData(deviceDataWasSent, data, token = token))
+                            call.respond(HttpStatusCode.OK, ClientManagementResponseData(deviceDataWasSent, data))
                             logger.writeLog(deviceDataWasSent, "$userId", SenderType.ID)
                         }
 
@@ -112,49 +98,47 @@ fun Route.clientManagementRoutes() {
                         call.respond(HttpStatusCode.NonAuthoritativeInformation, ClientManagementResponseData(authorizationError))
                         logger.writeLog(authorizationError, call.request.origin.remoteHost, SenderType.IP_ADDRESS)
                     }
-
                 }
-                post("/change") {
+                post("/change/{id}") {
+                    val deviceId = call.parameters["id"]!!.toULong()
                     val data = call.receive<ChangeDeviceData>()
 
                     call.principal<JWTPrincipal>()?.payload?.let {payload ->
                         val userId = payload.getClaim("id").asLong()
-                        val token = jwtCooker.buildToken(userId)
 
-                        if (!userDeviceDao.isExists(userId.toULong(), data.deviceId)) {
-                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(clientHasNotSuchDevice, token = token))
+                        val deviceData = userDeviceDao.get(deviceId) ?: run {
                             logger.writeLog(clientHasNotSuchDevice, "$userId", SenderType.ID)
-                            return@post
-                        }
-                        val deviceState = userDeviceDao.get(data.deviceId)!!.state
-
-                        if (!deviceStructureDao.isSensorExists(data.deviceId, data.sensor)) {
-                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(sensorIsNotExists, token = token))
-                            logger.writeLog(sensorIsNotExists, "$userId", SenderType.ID)
-                            return@post
+                            return@post call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(clientHasNotSuchDevice))
                         }
 
-                        deviceStructureDao.getSensorType(data.deviceId, data.sensor)!!.let {sensorType ->
-                            val state = getUpdateState(sensorType, data.state, data.sensor, deviceState) ?: run {
-                                call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(typeOfSensorStateIsNotCorrect, token = token))
+
+                        deviceStructureDao.getSensorType(deviceId, data.sensor)?.let {sensorType ->
+
+                            val state = getUpdateState(sensorType, data.state, data.sensor, deviceData.state) ?: run {
+                                call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(typeOfSensorStateIsNotCorrect))
                                 logger.writeLog(typeOfSensorStateIsNotCorrect, "$userId", SenderType.ID)
                                 return@post
                             }
 
-                            if (!userDeviceDao.updateState(data.deviceId, state)) {
-                                call.respond(HttpStatusCode.InternalServerError, ClientManagementResponseData(deviceStateWasNotBeenUpdated, token = token))
+                            if (!userDeviceDao.updateState(deviceId, state)) {
+                                call.respond(HttpStatusCode.InternalServerError, ClientManagementResponseData(deviceStateWasNotBeenUpdated))
                                 logger.writeLog(deviceStateWasNotBeenUpdated, "$userId", SenderType.ID)
                                 return@post
                             }
 
                             kredsClient.use {redis ->
-                                "$userId:updateStatement".let {
-                                    redis.set(it, state)
+                                "${deviceData.boardId}:updateStatement".let {
+                                    redis.set(it, "${data.sensor}:${data.state}")
                                     redis.expire(it, 3600U)
                                 }
                             }
-                            call.respond(HttpStatusCode.OK, ClientManagementResponseData(deviceStateHasBeenUpdated, token = token))
+
+                            call.respond(HttpStatusCode.OK, ClientManagementResponseData(deviceStateHasBeenUpdated))
                             logger.writeLog(deviceStateHasBeenUpdated, "$userId", SenderType.ID)
+
+                        } ?: run {
+                            logger.writeLog(sensorIsNotExists, "$userId", SenderType.ID)
+                            call.respond(HttpStatusCode.BadRequest, ClientManagementResponseData(sensorIsNotExists))
                         }
 
                     } ?: run {

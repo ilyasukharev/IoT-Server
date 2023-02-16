@@ -6,20 +6,12 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 interface DeviceStructure {
-    suspend fun isSensorExists(deviceId: ULong, sensorName: String): Boolean
     suspend fun addSensor(data: DeviceStructureData): Boolean
     suspend fun flushAll(deviceId: ULong): Boolean
     suspend fun getSensorType(deviceId: ULong, sensorName: String): String?
 }
 
 class DeviceStructureIMPL : DeviceStructure {
-    override suspend fun isSensorExists(deviceId: ULong, sensorName: String): Boolean = dbQuery {
-        DeviceStructureTable.select {
-            (DeviceStructureTable.id eq deviceId) and
-            (DeviceStructureTable.sensorName eq sensorName)
-        }.limit(1).singleOrNull()?.let{true} ?: false
-    }
-
     override suspend fun addSensor(data: DeviceStructureData): Boolean = dbQuery {
         DeviceStructureTable.insert {
             it[id] = data.deviceId

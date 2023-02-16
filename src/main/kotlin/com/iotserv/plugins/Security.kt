@@ -14,8 +14,11 @@ fun Application.configureSecurity() {
     install(Authentication) {
         jwt("desktop-app") {
             verifier(jwtCooker.verifyToken())
-            validate { jwtCooker.validate(it) }
 
+            validate {
+                if (jwtCooker.validate(it))     JWTPrincipal(it.payload)
+                else                            null
+            }
 
             challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")

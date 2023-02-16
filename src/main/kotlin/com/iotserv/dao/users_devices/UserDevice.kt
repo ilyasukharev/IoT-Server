@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.*
 
 interface UserDevice {
     suspend fun isExists(userId: ULong, deviceId: ULong): Boolean
+    suspend fun isExists(boardUUID: String): Boolean
     suspend fun saveNewDevice(data: UserDeviceData): Boolean
     suspend fun isBoardIdExists(boardId: String): Boolean
     suspend fun getAll(id: ULong): List<UserDeviceData>
@@ -19,6 +20,15 @@ class UserDeviceImpl : UserDevice {
             (UserDevicesTable.userId eq userId) and
             (UserDevicesTable.deviceId eq deviceId)
         }.limit(1).singleOrNull() != null
+    }
+
+    /**
+     * Important info: the boardUUID is unique.
+     */
+    override suspend fun isExists(boardUUID: String): Boolean = dbQuery {
+        UserDevicesTable.slice(UserDevicesTable.boardId).select {
+            UserDevicesTable.boardId eq boardUUID
+        }.singleOrNull() != null
     }
 
     override suspend fun saveNewDevice(data: UserDeviceData): Boolean = dbQuery {

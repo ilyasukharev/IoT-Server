@@ -10,7 +10,6 @@ import org.jetbrains.exposed.sql.select
 interface DeviceDefinitionManagement {
     suspend fun addNewDevice(data: DeviceDefinitionData): ULong?
     suspend fun isExists(deviceName: String): Boolean
-    suspend fun isExists(deviceId: ULong): Boolean
     suspend fun getDeviceId(deviceName: String): ULong?
     suspend fun removeDevice(deviceId: ULong): Boolean
     suspend fun getDeviceInfo (deviceId: ULong): DeviceDefinitionData?
@@ -29,12 +28,6 @@ class DeviceDefinitionManagementImpl : DeviceDefinitionManagement {
         DeviceDefinitionTable.select {
              DeviceDefinitionTable.deviceName eq deviceName
         }.limit(1).singleOrNull()?.let{true} ?: false
-    }
-
-    override suspend fun isExists(deviceId: ULong): Boolean = dbQuery {
-        DeviceDefinitionTable.select {
-            DeviceDefinitionTable.id eq deviceId
-        }.limit(1).singleOrNull() != null
     }
 
     override suspend fun getDeviceId(deviceName: String): ULong? = dbQuery {

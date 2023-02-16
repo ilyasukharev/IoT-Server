@@ -5,7 +5,6 @@ import com.iotserv.dao.device_structure.DeviceStructure
 import com.iotserv.dao.users_devices.UserDevice
 import com.iotserv.dto.*
 import com.iotserv.utils.DeviceSensorsHandler
-import com.iotserv.utils.JwtCooker
 import com.iotserv.utils.RoutesResponses.arrivedBoardIDIsIncorrect
 import com.iotserv.utils.RoutesResponses.arrivedSettingsIsIncorrect
 import com.iotserv.utils.RoutesResponses.attemptToConnect2Sides
@@ -17,11 +16,12 @@ import com.iotserv.utils.RoutesResponses.boardWasFound
 import com.iotserv.utils.RoutesResponses.boardWasNotFound
 import com.iotserv.utils.RoutesResponses.clientConnected
 import com.iotserv.utils.RoutesResponses.dataWereSuccessfullyWrote
-import com.iotserv.utils.RoutesResponses.deviceHasNotBeenAdded
 import com.iotserv.utils.RoutesResponses.deviceHasNotBeenAddedToUserBase
 import com.iotserv.utils.RoutesResponses.deviceIdWasNotFound
+import com.iotserv.utils.RoutesResponses.deviceWasNotBeenAdded
 import com.iotserv.utils.RoutesResponses.flushingDeviceSensors
 import com.iotserv.utils.RoutesResponses.integrityObjectsViolation
+import com.iotserv.utils.RoutesResponses.loggingIsImpossible
 import com.iotserv.utils.RoutesResponses.noBoardConnection
 import com.iotserv.utils.RoutesResponses.searchingTheClient
 import com.iotserv.utils.RoutesResponses.sendingBoardIDAccepted
@@ -29,6 +29,7 @@ import com.iotserv.utils.RoutesResponses.sendingSettingsAccepted
 import com.iotserv.utils.RoutesResponses.serializationFailed
 import com.iotserv.utils.RoutesResponses.settingsSuccessfullyReceived
 import com.iotserv.utils.RoutesResponses.successfullyBoardConnection
+import com.iotserv.utils.RoutesResponses.suchBoardIdAlreadyInBase
 import com.iotserv.utils.RoutesResponses.suchDeviceIdAlreadyRegistered
 import com.iotserv.utils.RoutesResponses.suchSocketAlreadyExists
 import com.iotserv.utils.RoutesResponses.unknownSocketCommand
@@ -46,14 +47,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.koin.ktor.ext.inject
 
-suspend fun receiveJsonData(
-    socket: WebSocketServerSession,
-    isBoardId: Boolean,
-    logger: Logger,
-    ip: String?,
-    id: Long?
-): BoardConnectionData {
-    if (ip == null && id == null) throw Exception("Can`t logging because ip and id is null")
+suspend fun receiveJsonData(socket: WebSocketServerSession, isBoardId: Boolean, logger: Logger, ip: String?, id: Long?): BoardConnectionData {
+    if (ip == null && id == null) throw Exception(loggingIsImpossible)
 
     var senderData = ""
     var senderType = SenderType.ID
@@ -93,14 +88,12 @@ suspend fun receiveJsonData(
         } catch (e: Exception) {
             socket.send(serializationFailed)
             logger.writeLog(serializationFailed, senderData, senderType)
-            logger.writeLog(e.message.toString(), senderData, senderType)
         }
     }
 }
 
 fun Route.connectionRoutes() {
     val kredsClient by inject<KredsClient>()
-    val jwtCooker by inject<JwtCooker>()
     val deviceDefinitionManagementDao by inject<DeviceDefinitionManagement>()
     val deviceStructureDao by inject<DeviceStructure>()
     val userDeviceDao by inject<UserDevice>()
@@ -124,16 +117,23 @@ fun Route.connectionRoutes() {
                             logger.writeLog(sendingBoardIDAccepted, ip, SenderType.IP_ADDRESS_BOARD)
                             send(sendingBoardIDAccepted)
 
-                            val boardUUID =
-                                receiveJsonData(this, true, logger, ip, null).boardIdentificationData!!.boardUUID
+                            val boardUUID = receiveJsonData(this, true, logger, ip, null).boardIdentificationData!!.boardUUID
+
+                            if (userDeviceDao.isExists(boardUUID)) {
+                                send(suchBoardIdAlreadyInBase)
+                                logger.writeLog(suchBoardIdAlreadyInBase, ip, SenderType.IP_ADDRESS_BOARD)
+                                return@collect close(CloseReason(CloseReason.Codes.NORMAL, suchBoardIdAlreadyInBase))
+
+                            }
+
                             send(attemptToConnect2Sides)
                             logger.writeLog(attemptToConnect2Sides, ip, SenderType.IP_ADDRESS_BOARD)
 
                             kredsClient.use { redis ->
                                 if (redis.get("$boardUUID:contact") != null) {
                                     logger.writeLog(suchSocketAlreadyExists, ip, SenderType.IP_ADDRESS_BOARD)
-                                    send(suchSocketAlreadyExists)
-                                    return@collect
+                                    return@collect send(suchSocketAlreadyExists)
+
                                 } else {
                                     redis.set("$boardUUID:contact", "false")
                                     redis.expire("$boardUUID:contact", 90U)
@@ -149,41 +149,35 @@ fun Route.connectionRoutes() {
                                         redis.set("$boardUUID:verify", "true")
                                         redis.expire("$boardUUID:verify", 3600U)
                                         logger.writeLog(successfullyBoardConnection, ip, SenderType.IP_ADDRESS_BOARD)
-                                        send(successfullyBoardConnection)
-                                        return@collect
+                                        return@collect send(successfullyBoardConnection)
                                     }
                                 }
                             }
                             logger.writeLog(noBoardConnection, ip, SenderType.IP_ADDRESS_BOARD)
-                            send(noBoardConnection)
+                            return@collect send(noBoardConnection)
                         }
 
                         "check" -> {
                             logger.writeLog(sendingBoardIDAccepted, ip, SenderType.IP_ADDRESS_BOARD)
                             send(sendingBoardIDAccepted)
 
-                            val boardUUID =
-                                receiveJsonData(this, true, logger, ip, null).boardIdentificationData!!.boardUUID
+                            val boardUUID = receiveJsonData(this, true, logger, ip, null).boardIdentificationData!!.boardUUID
 
                             kredsClient.use { redis ->
                                 if (redis.get("$boardUUID:verify") != "true" || redis.get("$boardUUID:clientID") == null) {
                                     logger.writeLog(authorizationBoardError, ip, SenderType.IP_ADDRESS_BOARD)
-                                    send(authorizationBoardError)
-                                    return@collect
+                                    return@collect send(authorizationBoardError)
                                 }
                             }
 
-                            var userId: Long = 0
-
-                            kredsClient.use { redis ->
+                            val userId = kredsClient.use { redis ->
                                 redis.get("$boardUUID:clientID")?.toLong()?.let { id ->
-                                    userId = id
                                     redis.del("$boardUUID:verify")
                                     redis.del("$boardUUID:clientID")
+                                    id
                                 } ?: run {
-                                    send(userIdWasNotFound)
                                     logger.writeLog(userIdWasNotFound, ip, SenderType.IP_ADDRESS_BOARD)
-                                    return@collect
+                                    return@collect send(userIdWasNotFound)
                                 }
                             }
 
@@ -221,32 +215,27 @@ fun Route.connectionRoutes() {
                                         }
                                     }
 
-
                                 } ?: run {
-                                    send(deviceHasNotBeenAdded)
-                                    logger.writeLog(deviceHasNotBeenAdded, ip, SenderType.IP_ADDRESS_BOARD)
-                                    return@collect
+                                    logger.writeLog(deviceWasNotBeenAdded, ip, SenderType.IP_ADDRESS_BOARD)
+                                    return@collect send(deviceWasNotBeenAdded)
                                 }
                             }
 
                             val deviceId = deviceDefinitionManagementDao.getDeviceId(data.deviceName) ?: run {
                                 logger.writeLog(deviceIdWasNotFound, ip, SenderType.IP_ADDRESS_BOARD)
-                                send(deviceIdWasNotFound)
-                                return@collect
+                                return@collect send(deviceIdWasNotFound)
                             }
 
                             if (userDeviceDao.isExists(userId.toULong(), deviceId)) {
                                 logger.writeLog(suchDeviceIdAlreadyRegistered, ip, SenderType.IP_ADDRESS_BOARD)
-                                send(suchDeviceIdAlreadyRegistered)
-                                return@collect
+                                return@collect send(suchDeviceIdAlreadyRegistered)
                             }
 
                             val state = DeviceSensorsHandler.serializeWithDefaultValues(data.sensorsList, data.statesTypesList)
 
                             if (!userDeviceDao.saveNewDevice(UserDeviceData(userId.toULong(), deviceId, state, boardUUID))) {
-                                logger.writeLog(deviceHasNotBeenAdded, ip, SenderType.IP_ADDRESS_BOARD)
-                                send(deviceHasNotBeenAddedToUserBase)
-                                return@collect
+                                logger.writeLog(deviceWasNotBeenAdded, ip, SenderType.IP_ADDRESS_BOARD)
+                                return@collect send(deviceHasNotBeenAddedToUserBase)
                             }
                             logger.writeLog(dataWereSuccessfullyWrote, ip, SenderType.IP_ADDRESS_BOARD)
                             send(dataWereSuccessfullyWrote)
@@ -270,12 +259,11 @@ fun Route.connectionRoutes() {
                     }
 
                     logger.writeLog(clientConnected, "$id", SenderType.ID)
-                    val token = jwtCooker.buildToken(id)
 
                     incoming.receiveAsFlow().collect {
                         it as? Frame.Text ?: run {
                             logger.writeLog(unknownSocketCommand, "$id", SenderType.ID)
-                            sendSerialized(SocketConnectionResponseData(unknownSocketCommand, token))
+                            sendSerialized(SocketConnectionResponseData(unknownSocketCommand))
                             return@collect
                         }
 
@@ -284,8 +272,7 @@ fun Route.connectionRoutes() {
                                 logger.writeLog(sendingBoardIDAccepted, "$id", SenderType.ID)
                                 send(sendingBoardIDAccepted)
 
-                                val boardUUID =
-                                    receiveJsonData(this, true, logger, null, id).boardIdentificationData!!.boardUUID
+                                val boardUUID = receiveJsonData(this, true, logger, null, id).boardIdentificationData!!.boardUUID
                                 logger.writeLog(attemptToConnect2Sides, "$id", SenderType.ID)
 
                                 repeat(60) {
@@ -298,16 +285,16 @@ fun Route.connectionRoutes() {
                                             redis.set("$boardUUID:clientID", "$id")
                                             redis.expire("$boardUUID:clientID", 3690U)
                                             logger.writeLog(boardWasFound, "$id", SenderType.ID)
-                                            sendSerialized(SocketConnectionResponseData(boardWasFound, token))
+                                            sendSerialized(SocketConnectionResponseData(boardWasFound))
                                             return@collect
                                         }
                                     }
                                 }
                                 logger.writeLog(boardWasNotFound, "$id", SenderType.ID)
-                                sendSerialized(SocketConnectionResponseData(boardWasNotFound, token))
+                                sendSerialized(SocketConnectionResponseData(boardWasNotFound))
                             }
 
-                            else -> sendSerialized(SocketConnectionResponseData(unknownSocketCommand, token))
+                            else -> sendSerialized(SocketConnectionResponseData(unknownSocketCommand))
                         }
                     }
                 } catch (e: Exception) {

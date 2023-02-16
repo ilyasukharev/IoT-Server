@@ -23,7 +23,7 @@ object DeviceSensorsHandler {
 
     fun deserializeToMap (state: String): HashMap<String, String> {
         val map = HashMap<String, String>()
-        state.split(";").filter { it.isNotEmpty() }.forEach {
+        state.split(";").filter { it.isNotEmpty() }.map {
             val sensor = it.split(":")
             map[sensor[0]] = sensor[1]
         }
@@ -40,16 +40,11 @@ object DeviceSensorsHandler {
     private fun isTypeCorrect (type: String,  state: String) : Boolean {
         return when (type) {
             tInteger -> state.toIntOrNull() != null
-            tBoolean ->  {
-                state.toBooleanStrictOrNull() != null
-            }
+            tBoolean -> state.toBooleanStrictOrNull() != null
             else     -> false
         }
     }
 
-    /**
-     * Returns null when there`re no exceptions
-     */
     fun getUpdateState (type: String, sensorState: String, sensor: String, deviceState: String) : String? {
         if (!isTypeCorrect(type, sensorState)) return null
 

@@ -1,12 +1,12 @@
 package com.iotserv.utils.validators
 
 import com.iotserv.dto.EmailData
-import com.iotserv.dto.VerifyCodeData
+import com.iotserv.dto.VerificationCodeData
 import com.iotserv.utils.RoutesResponses
 import com.iotserv.utils.RoutesResponses.incorrectCodeFormat
 import io.ktor.server.plugins.requestvalidation.*
 
-fun validateVerificationCode(data: VerifyCodeData): ValidationResult {
+fun validateVerificationCodeData(data: VerificationCodeData): ValidationResult {
     if (data.code.toString().length != 6)
         return ValidationResult.Invalid(RoutesResponses.incorrectCodeLength)
 

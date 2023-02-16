@@ -3,13 +3,12 @@ package com.iotserv.routes
 import com.iotserv.dao.personal_data.PersonalDataManagement
 import com.iotserv.dto.*
 import com.iotserv.utils.JwtCooker
-import com.iotserv.utils.RoutesResponses.attemptToLogin
-import com.iotserv.utils.RoutesResponses.attemptToRegister
 import com.iotserv.utils.RoutesResponses.authorizationHasBeenCompleted
 import com.iotserv.utils.RoutesResponses.codeIsWrongOrNotVerified
 import com.iotserv.utils.RoutesResponses.successfullyRegistered
 import com.iotserv.utils.RoutesResponses.userAlreadyExists
 import com.iotserv.utils.RoutesResponses.userHasNotBeenAdded
+import com.iotserv.utils.RoutesResponses.userNotFound
 import com.iotserv.utils.RoutesResponses.userNotFoundOrPasswordIsIncorrect
 import com.iotserv.utils.logger.Logger
 import com.iotserv.utils.logger.SenderType
@@ -24,8 +23,9 @@ import org.koin.ktor.ext.inject
 
 suspend fun isClientAuthenticated(redis: KredsClient, email: String): Boolean {
     redis.use {
-        if (it.get("${email}:authorization") != "true") return false
-        else {
+        if (it.get("${email}:authorization") != "true") {
+            return false
+        } else {
             it.del("${email}:authorization")
             return true
         }
@@ -43,34 +43,31 @@ fun Route.authorizationRoutes() {
             post {
                 val data = call.receive<RegistrationData>()
                 val clientIp = call.request.origin.remoteHost
-                logger.writeLog(attemptToRegister, clientIp, SenderType.IP_ADDRESS)
 
-
-                if (personalDataManagementDao.isUserExists(data)) {
+                if (personalDataManagementDao.isUserExists(data.email, data.number)) {
                     logger.writeLog(userAlreadyExists, clientIp, SenderType.IP_ADDRESS)
-                    call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(userAlreadyExists))
-                } else {
-                    if (!isClientAuthenticated(kredsClient, data.email)) {
-                        logger.writeLog(codeIsWrongOrNotVerified, clientIp, SenderType.IP_ADDRESS)
-                        return@post call.respond(
-                            HttpStatusCode.Unauthorized,
-                            AuthorizationResponseData(codeIsWrongOrNotVerified)
-                        )
-                    }
+                    return@post call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(userAlreadyExists))
+                }
 
-                    personalDataManagementDao.writeNewUser(
-                        RegistrationData(data.number, data.email, data.password)
-                    )?.let { userId ->
-                        call.respond(
-                            HttpStatusCode.Accepted,
-                            AuthorizationResponseData(successfullyRegistered, jwtCooker.buildToken(userId.toLong()))
-                        )
-                        logger.writeLog(successfullyRegistered, clientIp, SenderType.IP_ADDRESS)
+                if (!isClientAuthenticated(kredsClient, data.email)) {
+                    logger.writeLog(codeIsWrongOrNotVerified, clientIp, SenderType.IP_ADDRESS)
+                    return@post call.respond(HttpStatusCode.Unauthorized, AuthorizationResponseData(codeIsWrongOrNotVerified))
+                }
 
-                    } ?: run {
-                        call.respond(AuthorizationResponseData(userHasNotBeenAdded))
-                        logger.writeLog(userHasNotBeenAdded, clientIp, SenderType.IP_ADDRESS)
-                    }
+                personalDataManagementDao.writeNewUser(data)?.let { userId ->
+                    call.respond (
+                        HttpStatusCode.Accepted,
+                        AuthorizationResponseData (
+                            successfullyRegistered,
+                            jwtCooker.buildAccessJwt(userId.toLong()),
+                            jwtCooker.buildRefreshJwt(userId.toLong())
+                        )
+                    )
+                    logger.writeLog(successfullyRegistered, clientIp, SenderType.IP_ADDRESS)
+
+                } ?: run {
+                    call.respond(HttpStatusCode.InternalServerError, AuthorizationResponseData(userHasNotBeenAdded))
+                    logger.writeLog(userHasNotBeenAdded, clientIp, SenderType.IP_ADDRESS)
                 }
             }
         }
@@ -79,23 +76,27 @@ fun Route.authorizationRoutes() {
             post {
                 val data = call.receive<LoginData>()
                 val clientIp = call.request.origin.remoteHost
-                logger.writeLog(attemptToLogin, clientIp, SenderType.IP_ADDRESS)
 
-                personalDataManagementDao.verifyUserLoginAndPwd(data)?.let {
+                if (!personalDataManagementDao.isUserDataCorrect(data)) {
+                    logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
+                    return@post call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(userNotFoundOrPasswordIsIncorrect))
+                }
+
+                personalDataManagementDao.getId(data.email)?.let {userId ->
+                    logger.writeLog(authorizationHasBeenCompleted, clientIp, SenderType.IP_ADDRESS)
                     call.respond(
                         HttpStatusCode.Accepted,
-                        AuthorizationResponseData(authorizationHasBeenCompleted, jwtCooker.buildToken(it.toLong()))
+                        AuthorizationResponseData (
+                            authorizationHasBeenCompleted,
+                            jwtCooker.buildAccessJwt(userId.toLong()),
+                            jwtCooker.buildRefreshJwt(userId.toLong())
+                        )
                     )
-                    logger.writeLog(authorizationHasBeenCompleted, clientIp, SenderType.IP_ADDRESS)
                 } ?: run {
-                    call.respond(
-                        HttpStatusCode.BadRequest,
-                        AuthorizationResponseData(userNotFoundOrPasswordIsIncorrect)
-                    )
-                    logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
+                    logger.writeLog(userNotFound, clientIp, SenderType.IP_ADDRESS)
+                    call.respond(HttpStatusCode.InternalServerError, AuthorizationResponseData(userNotFound))
                 }
             }
         }
-
     }
 }

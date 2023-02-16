@@ -1,78 +1,119 @@
-[2023-02-03 14:08:08]:ID:1 - Client connected
-[2023-02-03 14:08:12]:ID:1 - Sending board id accepted
-[2023-02-03 14:08:14]:ID:1 - Board id successfully received
-[2023-02-03 14:08:14]:ID:1 - Attempt to connect two sides
-[2023-02-03 14:08:15]:ID:1 - Board was found
-[2023-02-03 14:08:15]:BOARD:192.168.0.104 - Successfully board connection
-[2023-02-03 14:08:22]:BOARD:192.168.0.104 - Sending board id accepted
-[2023-02-03 14:08:23]:BOARD:192.168.0.104 - Board id successfully received
-[2023-02-03 14:08:23]:BOARD:192.168.0.104 - Sending settings accepted
-[2023-02-03 14:08:24]:BOARD:192.168.0.104 - Settings successfully received
-[2023-02-03 14:08:25]:BOARD:192.168.0.104 - Data were successfully wrote
-[2023-02-04 12:20:12]:DESKTOP-E6KSMUA - Attempt to send verify code
-[2023-02-04 12:20:14]:DESKTOP-E6KSMUA - Sending email with verify code
-[2023-02-04 12:20:28]:DESKTOP-E6KSMUA - Code is right
-[2023-02-04 12:20:32]:DESKTOP-E6KSMUA - Attempt to register
-[2023-02-04 12:20:33]:DESKTOP-E6KSMUA - Successfully registered
-[2023-02-04 12:22:07]:ID:1 - Client connected
-[2023-02-04 12:26:25]:ID:1 - Sending board id accepted
-[2023-02-04 12:26:27]:ID:1 - Board id successfully received
-[2023-02-04 12:26:27]:ID:1 - Attempt to connect two sides
-[2023-02-04 12:26:39]:BOARD:192.168.0.104 - Board connected
-[2023-02-04 12:26:39]:BOARD:192.168.0.104 - Sending board id accepted
-[2023-02-04 12:26:40]:BOARD:192.168.0.104 - Board id successfully received
-[2023-02-04 12:26:40]:BOARD:192.168.0.104 - Attempt to connect two sides
-[2023-02-04 12:26:41]:ID:1 - Board was found
-[2023-02-04 12:26:41]:BOARD:192.168.0.104 - Successfully board connection
-[2023-02-04 12:26:48]:BOARD:192.168.0.104 - Sending board id accepted
-[2023-02-04 12:26:49]:BOARD:192.168.0.104 - Board id successfully received
-[2023-02-04 12:26:49]:BOARD:192.168.0.104 - Sending settings accepted
-[2023-02-04 12:26:50]:BOARD:192.168.0.104 - Settings successfully received
-[2023-02-04 12:26:51]:BOARD:192.168.0.104 - Flushing device sensors
-[2023-02-04 12:26:52]:BOARD:192.168.0.104 - Data were successfully wrote
-[2023-02-04 12:27:10]:BOARD:192.168.0.104 - Board connected
-[2023-02-04 12:27:10]:BOARD:192.168.0.104 - Sending board id accepted
-[2023-02-04 12:27:11]:BOARD:192.168.0.104 - Board id successfully received
-[2023-02-04 12:27:11]:BOARD:192.168.0.104 - Attempt to connect two sides
-[2023-02-04 12:27:30]:ID:1 - Sending board id accepted
-[2023-02-04 12:27:33]:ID:1 - Board id successfully received
-[2023-02-04 12:27:33]:ID:1 - Attempt to connect two sides
-[2023-02-04 12:27:34]:ID:1 - Board was found
-[2023-02-04 12:27:35]:BOARD:192.168.0.104 - Successfully board connection
-[2023-02-04 12:27:41]:BOARD:192.168.0.104 - Sending board id accepted
-[2023-02-04 12:27:42]:BOARD:192.168.0.104 - Board id successfully received
-[2023-02-04 12:27:42]:BOARD:192.168.0.104 - Sending settings accepted
-[2023-02-04 12:27:43]:BOARD:192.168.0.104 - Settings successfully received
-[2023-02-04 12:27:44]:BOARD:192.168.0.104 - Such device id already registered
-[2023-02-04 15:14:32]:DESKTOP-E6KSMUA - Attempt to login
-[2023-02-04 15:14:32]:DESKTOP-E6KSMUA - Authorization has been completed
-[2023-02-04 15:17:40]:DESKTOP-E6KSMUA - Attempt to login
-[2023-02-04 15:17:41]:DESKTOP-E6KSMUA - Authorization has been completed
-[2023-02-08 10:46:31]:DESKTOP-E6KSMUA - Attempt to login
-[2023-02-08 10:46:31]:DESKTOP-E6KSMUA - Authorization has been completed
-[2023-02-08 10:46:56]:ID:1 - List is empty
-[2023-02-08 10:47:36]:ID:1 - List was arrived
-[2023-02-08 10:53:20]:ID:1 - List was arrived
-[2023-02-10 16:42:16]:DESKTOP-E6KSMUA - Attempt to login
-[2023-02-10 16:42:18]:DESKTOP-E6KSMUA - Authorization has been completed
-[2023-02-10 16:44:56]:ID:1 - Id is not found
-[2023-02-10 16:45:01]:ID:1 - List was arrived
-[2023-02-10 16:47:55]:ID:1 - List was arrived
-[2023-02-10 16:48:40]:ID:1 - List was arrived
-[2023-02-10 17:06:58]:ID:1 - Client has not such device
-[2023-02-10 17:07:07]:ID:1 - Sensor is not exists
-[2023-02-10 17:09:23]:ID:1 - Type of sensor state is not correct
-[2023-02-10 17:10:10]:ID:1 - Type of sensor state is not correct
-[2023-02-10 17:47:41]:ID:1 - Device state has been updated
-[2023-02-10 17:49:23]:ID:1 - Device state has been updated
-[2023-02-10 21:28:54]:ID:1 - Device data was sent
-[2023-02-10 21:29:05]:ID:1 - Device data was sent
-[2023-02-10 21:29:10]:ID:1 - Client has not such device
-[2023-02-10 21:29:14]:ID:1 - Device data was sent
-[2023-02-10 21:38:35]:ID:1 - Device data was sent
-[2023-02-10 21:38:40]:ID:1 - Device data was sent
-[2023-02-10 21:39:00]:ID:1 - Sensor is not exists
-[2023-02-10 21:39:41]:ID:1 - Sensor is not exists
-[2023-02-10 21:39:46]:ID:1 - Device state has been updated
-[2023-02-10 21:39:57]:ID:1 - Sensor is not exists
-[2023-02-10 21:40:42]:ID:1 - Device state has been updated
+[2023-02-16 17:19:58]:DESKTOP-E6KSMUA - Sending email with verify code
+[2023-02-16 17:23:31]:DESKTOP-E6KSMUA - Sending email with verify code
+[2023-02-16 17:24:26]:DESKTOP-E6KSMUA - Code is right
+[2023-02-16 17:25:14]:DESKTOP-E6KSMUA - Successfully registered
+[2023-02-16 17:25:52]:ID:1 - Not enough authorization information
+[2023-02-16 17:26:09]:ID:1 - Not enough authorization information
+[2023-02-16 17:27:13]:ID:1 - Not enough authorization information
+[2023-02-16 17:27:52]:DESKTOP-E6KSMUA - Such user not found or password is incorrect
+[2023-02-16 17:27:57]:DESKTOP-E6KSMUA - Such user not found or password is incorrect
+[2023-02-16 17:27:58]:DESKTOP-E6KSMUA - Such user not found or password is incorrect
+[2023-02-16 17:28:14]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-16 17:28:39]:ID:1 - Access token was updated
+[2023-02-16 17:30:11]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-16 17:30:43]:ID:1 - Not enough authorization information
+[2023-02-16 17:31:50]:ID:1 - Access token was updated
+[2023-02-16 17:32:42]:ID:1 - Access token was updated
+[2023-02-16 17:33:39]:ID:1 - Access token was updated
+[2023-02-16 17:36:02]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-16 17:36:20]:ID:1 - Access token was updated
+[2023-02-16 17:36:35]:ID:1 - Not enough authorization information
+[2023-02-16 17:37:17]:DESKTOP-E6KSMUA - Sending email with verify code
+[2023-02-16 17:37:21]:DESKTOP-E6KSMUA - Sending email with verify code
+[2023-02-16 17:37:48]:DESKTOP-E6KSMUA - Code is right
+[2023-02-16 17:38:50]:DESKTOP-E6KSMUA - Password was successfully changed
+[2023-02-16 19:29:51]:DESKTOP-E6KSMUA - Authorization has been completed
+[2023-02-16 19:30:23]:ID:1 - Client connected
+[2023-02-16 19:30:37]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:31:43]:BOARD:DESKTOP-E6KSMUA - Serialization failed
+[2023-02-16 19:31:58]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:31:59]:BOARD:DESKTOP-E6KSMUA - Board id was not found
+[2023-02-16 19:32:05]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:32:05]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:32:05]:BOARD:DESKTOP-E6KSMUA - Board id was not found
+[2023-02-16 19:32:10]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:32:15]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:32:15]:BOARD:DESKTOP-E6KSMUA - Board id was not found
+[2023-02-16 19:32:28]:BOARD:DESKTOP-E6KSMUA - Board connected
+[2023-02-16 19:32:32]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:32:34]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:32:34]:BOARD:DESKTOP-E6KSMUA - Attempt to connect two sides
+[2023-02-16 19:32:40]:ID:1 - Sending board id accepted
+[2023-02-16 19:32:44]:ID:1 - Board id successfully received
+[2023-02-16 19:32:44]:ID:1 - Attempt to connect two sides
+[2023-02-16 19:32:45]:ID:1 - Board was found
+[2023-02-16 19:32:45]:BOARD:DESKTOP-E6KSMUA - Successfully board connection
+[2023-02-16 19:32:53]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:32:56]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:32:56]:BOARD:DESKTOP-E6KSMUA - Sending settings accepted
+[2023-02-16 19:34:25]:BOARD:DESKTOP-E6KSMUA - Serialization failed
+[2023-02-16 19:34:28]:BOARD:DESKTOP-E6KSMUA - Serialization failed
+[2023-02-16 19:34:36]:BOARD:DESKTOP-E6KSMUA - Settings successfully received
+[2023-02-16 19:34:36]:BOARD:DESKTOP-E6KSMUA - Flushing device sensors
+[2023-02-16 19:34:36]:BOARD:DESKTOP-E6KSMUA - Data were successfully wrote
+[2023-02-16 19:34:59]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:35:01]:BOARD:DESKTOP-E6KSMUA - Serialization failed
+[2023-02-16 19:35:01]:BOARD:DESKTOP-E6KSMUA - ArrayChannel was cancelled
+[2023-02-16 19:36:17]:ID:1 - List was sent
+[2023-02-16 19:37:06]:ID:1 - Device data was sent
+[2023-02-16 19:37:15]:ID:1 - Device was not found
+[2023-02-16 19:37:21]:ID:1 - Device data was sent
+[2023-02-16 19:40:43]:ID:1 - Sensor is not exists
+[2023-02-16 19:40:51]:ID:1 - Device data was sent
+[2023-02-16 19:41:20]:ID:1 - Type of sensor state is not correct
+[2023-02-16 19:41:25]:ID:1 - Device state has been updated
+[2023-02-16 19:41:30]:ID:1 - Type of sensor state is not correct
+[2023-02-16 19:41:36]:ID:1 - Sensor is not exists
+[2023-02-16 19:41:40]:ID:1 - Type of sensor state is not correct
+[2023-02-16 19:41:44]:ID:1 - Device state has been updated
+[2023-02-16 19:41:54]:ID:1 - Device state has been updated
+[2023-02-16 19:41:57]:ID:1 - Type of sensor state is not correct
+[2023-02-16 19:42:04]:ID:1 - Device data was sent
+[2023-02-16 19:42:23]:ID:1 - Client connected
+[2023-02-16 19:42:26]:ID:1 - Sending board id accepted
+[2023-02-16 19:42:28]:ID:1 - Board id successfully received
+[2023-02-16 19:42:28]:ID:1 - Attempt to connect two sides
+[2023-02-16 19:42:38]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:42:40]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:42:40]:BOARD:DESKTOP-E6KSMUA - Such board id already in base
+[2023-02-16 19:42:51]:ID:1 - Client connected
+[2023-02-16 19:42:52]:ID:1 - Sending board id accepted
+[2023-02-16 19:42:57]:ID:1 - Board id successfully received
+[2023-02-16 19:42:57]:ID:1 - Attempt to connect two sides
+[2023-02-16 19:43:01]:BOARD:DESKTOP-E6KSMUA - Board connected
+[2023-02-16 19:43:04]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:43:07]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:43:07]:BOARD:DESKTOP-E6KSMUA - Attempt to connect two sides
+[2023-02-16 19:43:07]:ID:1 - Board was found
+[2023-02-16 19:43:08]:BOARD:DESKTOP-E6KSMUA - Successfully board connection
+[2023-02-16 19:43:17]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:43:25]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:43:25]:BOARD:DESKTOP-E6KSMUA - Sending settings accepted
+[2023-02-16 19:43:29]:ID:1 - Board was not found
+[2023-02-16 19:43:36]:BOARD:DESKTOP-E6KSMUA - Serialization failed
+[2023-02-16 19:43:45]:BOARD:DESKTOP-E6KSMUA - Serialization failed
+[2023-02-16 19:43:52]:BOARD:DESKTOP-E6KSMUA - Settings successfully received
+[2023-02-16 19:43:53]:BOARD:DESKTOP-E6KSMUA - Such device id already registered
+[2023-02-16 19:43:58]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:44:15]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:44:15]:BOARD:DESKTOP-E6KSMUA - Authorization board error
+[2023-02-16 19:44:21]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:44:24]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:44:24]:BOARD:DESKTOP-E6KSMUA - Attempt to connect two sides
+[2023-02-16 19:44:31]:ID:1 - Sending board id accepted
+[2023-02-16 19:44:33]:ID:1 - Board id successfully received
+[2023-02-16 19:44:33]:ID:1 - Attempt to connect two sides
+[2023-02-16 19:44:34]:ID:1 - Board was found
+[2023-02-16 19:44:34]:BOARD:DESKTOP-E6KSMUA - Successfully board connection
+[2023-02-16 19:44:39]:BOARD:DESKTOP-E6KSMUA - Sending board id accepted
+[2023-02-16 19:44:44]:BOARD:DESKTOP-E6KSMUA - Board id successfully received
+[2023-02-16 19:44:44]:BOARD:DESKTOP-E6KSMUA - Sending settings accepted
+[2023-02-16 19:44:55]:BOARD:DESKTOP-E6KSMUA - Settings successfully received
+[2023-02-16 19:44:55]:BOARD:DESKTOP-E6KSMUA - Flushing device sensors
+[2023-02-16 19:44:56]:BOARD:DESKTOP-E6KSMUA - Data were successfully wrote
+[2023-02-16 19:45:13]:ID:1 - List was sent
+[2023-02-16 19:46:30]:ID:1 - Device state has been updated
+[2023-02-16 19:46:44]:ID:1 - Device data was sent
+[2023-02-16 19:46:50]:ID:1 - List was sent
+[2023-02-16 19:47:03]:ID:1 - Sensor is not exists
+[2023-02-16 19:47:09]:ID:1 - List was sent

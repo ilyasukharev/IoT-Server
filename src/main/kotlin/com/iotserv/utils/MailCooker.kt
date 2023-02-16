@@ -16,7 +16,7 @@ object MailCooker {
     private val messageTitle = config.property("mail.messageTitle").getString()
     private val messagePatternProp = config.property("mail.messagePattern").getString()
     private val baseEmail = config.property("mail.baseEmail").getString()
-    private val exceptionMessageTitle = "To Admins. Exceptions!"
+    private const val exceptionMessageTitle = "To Admins. Exceptions!"
 
     fun generateRandomCode(): Int = (111111..999999).random()
 

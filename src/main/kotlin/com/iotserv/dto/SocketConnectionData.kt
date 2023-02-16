@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SocketConnectionResponseData(
     val message: String,
-    val token: String? = null,
 )
 
 @Serializable

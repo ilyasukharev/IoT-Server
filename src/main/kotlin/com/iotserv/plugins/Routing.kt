@@ -13,5 +13,6 @@ fun Application.configureRouting() {
         connectionRoutes()
         clientManagementRoutes()
         boardManagementRoutes()
+        configureAuthenticate()
     }
 }

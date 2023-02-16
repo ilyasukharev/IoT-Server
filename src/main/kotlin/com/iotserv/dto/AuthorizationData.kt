@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AuthorizationResponseData (
     val msg: String,
-    val token: String? = null
+    val accessToken: String? = null,
+    val refreshToken: String? = null,
 )
 
 @Serializable
@@ -25,7 +26,7 @@ data class LoginData(
 data class EmailData(val email: String)
 
 @Serializable
-data class VerifyCodeData(
+data class VerificationCodeData(
     val email: String,
     val code: Int
 )

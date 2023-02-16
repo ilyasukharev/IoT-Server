@@ -1,6 +1,5 @@
 package com.iotserv.utils.validators
 
-import com.iotserv.utils.RoutesResponses
 import com.iotserv.utils.RoutesResponses.incorrectEmailFormat
 import com.iotserv.utils.RoutesResponses.incorrectEmailLength
 import com.iotserv.utils.RoutesResponses.incorrectPasswordLength

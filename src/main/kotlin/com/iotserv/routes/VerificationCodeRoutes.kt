@@ -2,7 +2,6 @@ package com.iotserv.routes
 
 import com.iotserv.dto.*
 import com.iotserv.utils.MailCooker
-import com.iotserv.utils.RoutesResponses.attemptToSendVerifyCode
 import com.iotserv.utils.RoutesResponses.codeIsRight
 import com.iotserv.utils.RoutesResponses.codeIsWrong
 import com.iotserv.utils.RoutesResponses.connectionTimeWasUp
@@ -28,12 +27,11 @@ fun Route.verificationCodeRoutes() {
         post("/send") {
             val email = call.receive<EmailData>().email
             val clientIp = call.request.origin.remoteHost
-            logger.writeLog(attemptToSendVerifyCode, clientIp, SenderType.IP_ADDRESS)
 
-            MailCooker.generateRandomCode().let { randomCode ->
+            MailCooker.generateRandomCode().let { generatedCode ->
                 launch {
                     try {
-                        MailCooker.sendResetEmail(email, randomCode)
+                        MailCooker.sendResetEmail(email, generatedCode)
                         logger.writeLog(sendingEmailWithVerifyCode, clientIp, SenderType.IP_ADDRESS)
                     } catch (e: Exception) {
                         logger.writeLog(e.message.toString(), clientIp, SenderType.IP_ADDRESS)
@@ -41,7 +39,7 @@ fun Route.verificationCodeRoutes() {
                 }
 
                 kredsClient.use { redis ->
-                    redis.set("$email:verificationCode", "$randomCode")
+                    redis.set("$email:verificationCode", "$generatedCode")
                     redis.expire("$email:verificationCode", 1000U)
                 }
                 call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(verifyCodeWasSent))
@@ -49,26 +47,29 @@ fun Route.verificationCodeRoutes() {
 
         }
         post("/verify") {
-            val data = call.receive<VerifyCodeData>()
+            val data = call.receive<VerificationCodeData>()
             val clientIp = call.request.origin.remoteHost
 
             kredsClient.use { redis ->
                 redis.get("${data.email}:verificationCode")
             }?.let { rightCode ->
-                if (rightCode.toInt() == data.code) {
-                    kredsClient.use { redis ->
-                        redis.del("${data.email}:verificationCode")
-                        redis.set("${data.email}:authorization", "true")
-                        redis.expire("${data.email}:authorization", 1000U)
-                    }
-                    logger.writeLog(codeIsRight, clientIp, SenderType.IP_ADDRESS)
-                    call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(codeIsRight))
-                } else {
+
+                if (rightCode.toInt() != data.code) {
                     logger.writeLog(codeIsWrong, clientIp, SenderType.IP_ADDRESS)
-                    call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(codeIsWrong))
+                    return@post call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(codeIsWrong))
                 }
+
+                kredsClient.use { redis ->
+                    redis.del("${data.email}:verificationCode")
+                    redis.set("${data.email}:authorization", "true")
+                    redis.expire("${data.email}:authorization", 1000U)
+                }
+
+                logger.writeLog(codeIsRight, clientIp, SenderType.IP_ADDRESS)
+                call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(codeIsRight))
+
             } ?: run {
-                call.respond(HttpStatusCode.NotFound, AuthorizationResponseData(connectionTimeWasUp))
+                call.respond(HttpStatusCode.BadRequest, AuthorizationResponseData(connectionTimeWasUp))
                 logger.writeLog(connectionTimeWasUp, clientIp, SenderType.IP_ADDRESS)
             }
         }

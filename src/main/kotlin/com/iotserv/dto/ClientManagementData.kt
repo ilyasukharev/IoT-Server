@@ -18,7 +18,6 @@ data class DetailsDeviceData (
 
 @Serializable
 data class ChangeDeviceData (
-    val deviceId: ULong,
     val sensor: String,
     val state: String,
 )
@@ -28,5 +27,4 @@ data class ClientManagementResponseData (
     val msg: String,
     val deviceInfo: DetailsDeviceData? = null,
     val deviceListInfo: List<CommonDeviceData>? = null,
-    val token: String? = null
 )

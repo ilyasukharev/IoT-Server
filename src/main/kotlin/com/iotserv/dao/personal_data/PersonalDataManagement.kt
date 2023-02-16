@@ -9,11 +9,12 @@ import org.jetbrains.exposed.sql.update
 
 interface PersonalDataManagement {
     suspend fun writeNewUser(data: RegistrationData): ULong?
-    suspend fun verifyUserLoginAndPwd(data: LoginData): ULong?
-    suspend fun isUserExists(data: RegistrationData): Boolean
+    suspend fun isUserDataCorrect(data: LoginData): Boolean
+    suspend fun isUserExists(email: String, number: String): Boolean
     suspend fun isUserExists(email: String): Boolean
-    suspend fun getId(data: EmailData) : ULong?
-    suspend fun updatePassword(id: ULong, data: PasswordData): Boolean
+    suspend fun isUserExists(id: ULong): Boolean
+    suspend fun getId(email: String) : ULong?
+    suspend fun updatePassword(email: String, password: String): Boolean
     suspend fun updateAll(id:ULong, data: PersonalData): Boolean
 }
 
@@ -27,19 +28,16 @@ class PersonalDataManagementIMPL : PersonalDataManagement {
         }.resultedValues?.singleOrNull()?.get(PersonalDataTable.id)
     }
 
-    override suspend fun verifyUserLoginAndPwd(data: LoginData): ULong? = dbQuery {
+    override suspend fun isUserDataCorrect(data: LoginData): Boolean = dbQuery {
         PersonalDataTable.select {
             PersonalDataTable.email eq data.email
-        }.limit(1).singleOrNull()?.let {
-            if (it[PersonalDataTable.password].toString() == data.password)     it[PersonalDataTable.id]
-            else                                                                null
-        }
+        }.limit(1).singleOrNull()?.let {it[PersonalDataTable.password] == data.password} ?: false
     }
 
-    override suspend fun isUserExists(data: RegistrationData): Boolean = dbQuery {
+    override suspend fun isUserExists(email: String, number: String): Boolean = dbQuery {
         PersonalDataTable.select {
-            (PersonalDataTable.email eq data.email) or (PersonalDataTable.number eq data.number)
-        }.limit(1).singleOrNull()?.let{ true } ?: false
+            (PersonalDataTable.email eq email) or (PersonalDataTable.number eq number)
+        }.limit(1).singleOrNull() != null
     }
 
     override suspend fun isUserExists(email: String): Boolean = dbQuery{
@@ -48,15 +46,21 @@ class PersonalDataManagementIMPL : PersonalDataManagement {
         }.limit(1).singleOrNull() != null
     }
 
-    override suspend fun getId(data: EmailData): ULong? = dbQuery {
+    override suspend fun isUserExists(id: ULong): Boolean = dbQuery {
         PersonalDataTable.select {
-            PersonalDataTable.email eq data.email
+            PersonalDataTable.id eq id
+        }.limit(1).singleOrNull() != null
+    }
+
+    override suspend fun getId(email: String): ULong? = dbQuery {
+        PersonalDataTable.select {
+            PersonalDataTable.email eq email
         }.limit(1).singleOrNull()?.get(PersonalDataTable.id)
     }
 
-    override suspend fun updatePassword(id: ULong, data: PasswordData): Boolean = dbQuery {
-        PersonalDataTable.update ({PersonalDataTable.id eq id}) {
-            it[password] = data.password
+    override suspend fun updatePassword(email: String, password: String): Boolean = dbQuery {
+        PersonalDataTable.update ({PersonalDataTable.email eq email}) {
+            it[PersonalDataTable.password] = password
         } > 0
     }
 
