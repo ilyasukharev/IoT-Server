@@ -1,13 +1,10 @@
 package com.iotserv.dao.users_devices
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.id.LongIdTable
 
-object UserDevicesTable : Table("user_devices") {
-    private val noteId = ulong("note_id").autoIncrement()
-    val userId = ulong("user_id")
-    val deviceId = ulong("device_id")
+object UserDevicesTable : LongIdTable("user_devices") {
+    val userId = long("user_id")
+    val deviceId = long("device_id")
     val state = varchar("device_state", length = 255)
     val boardId = varchar("board_id", length = 40)
-
-    override val primaryKey = PrimaryKey(noteId)
 }

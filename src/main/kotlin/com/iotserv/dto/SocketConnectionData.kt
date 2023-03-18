@@ -28,19 +28,19 @@ data class ControlDeviceData(
 data class DeviceDefinitionData(
     val deviceName: String,
     val deviceDescription: String,
-    val countDeviceSensors: UInt
+    val countDeviceSensors: Int
 )
 
 data class DeviceStructureData(
-    val deviceId: ULong,
+    val deviceId: Long,
     val sensorName: String,
     val sensorStateType: String,
 )
 
 
 data class UserDeviceData(
-    val userId: ULong,
-    val deviceId: ULong,
+    val userId: Long,
+    val deviceId: Long,
     val state: String,
     val boardId: String
 )

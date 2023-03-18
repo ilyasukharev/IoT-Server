@@ -6,7 +6,7 @@ import com.iotserv.dto.RegistrationData
 import io.ktor.server.plugins.requestvalidation.*
 
 fun validatePersonalData(data: PersonalData): ValidationResult =
-    validateRegistrationData(RegistrationData(data.number, data.email, data.password))
+    validateRegistrationData(RegistrationData(data.email, data.password))
 
 fun validateChangePasswordData(data: ChangePasswordData): ValidationResult {
     isEmailAvailable(data.email)?.let {

@@ -1,5 +1,5 @@
 
-POST http://192.168.0.103:8080/code/send
+POST http://192.168.0.107:8080/code/send
 Content-Type: application/json
 
 {
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://192.168.0.103:8080/code/verify
+POST http://192.168.0.107:8080/code/verify
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://192.168.0.103:8080/account/register
+POST http://192.168.0.107:8080/account/register
 Content-Type: application/json
 
 {
@@ -26,12 +26,12 @@ Content-Type: application/json
 }
 
 ###
-POST http://192.168.0.103:8080/account/login
+POST http://192.168.0.106:8080/account/login
 Content-Type: application/json
 
 {
   "email": "ziomki@yandex.ru",
-  "password": "Ilya12344444"
+  "password": "ilya123321"
 }
 
 ###
@@ -44,5 +44,19 @@ Content-Type: application/json
 }
 
 ###
-GET http://192.168.0.103:8080/token/update
-Authorization: Bearer
+GET http://192.168.0.106:8080/token/update
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc4NjE1NTY5fQ.WAd4wypjP4q43qqSR9LlfKPOV3tAQXZnCRikNUwBRrY
+
+###
+POST http://192.168.0.106:8080/management/user/sensors/change/7
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNjo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA2OjgwODAvIiwiaWQiOjEsImV4cCI6MTY3NjgyMTc5NX0.OqaFS0KoSCxdrt-sApn13vefHaCjhxmqUID-zNuhdpU
+Content-Type: application/json
+
+{
+  "sensor": "Мотор",
+  "state": "false"
+}
+
+###
+GET http://192.168.0.106:8080/management/user/devices/1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNjo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA2OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc4ODk0Mjg2fQ.GumSW5S6qsAJOdBzZd46IWNRlbeuXcH2BkNv3QPMa0o

@@ -11,7 +11,6 @@ data class ChangePasswordData (
 @Serializable
 data class PersonalData (
     val email: String,
-    val number: String,
     val password: String
 )
 

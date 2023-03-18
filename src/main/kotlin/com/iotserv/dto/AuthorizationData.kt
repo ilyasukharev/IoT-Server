@@ -4,14 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthorizationResponseData (
-    val msg: String,
+    val msg: String? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null,
 )
 
 @Serializable
 data class RegistrationData(
-    val number: String,
     val email: String,
     val password: String,
 )

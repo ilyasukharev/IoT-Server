@@ -1,12 +1,8 @@
 package com.iotserv.dao.personal_data
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.id.LongIdTable
 
-object PersonalDataTable : Table("personal_data") {
-    val id = ulong("id").autoIncrement()
-    val number = varchar("number", length = 11)
+object PersonalDataTable : LongIdTable("personal_data") {
     val email = varchar("email", length = 50)
     val password = varchar("password", length = 50)
-
-    override val primaryKey: PrimaryKey = PrimaryKey(id)
 }

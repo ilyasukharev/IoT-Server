@@ -1,17 +1,14 @@
 package com.iotserv.plugins
 
-import com.iotserv.utils.MailCooker
-import com.iotserv.utils.RoutesResponses.redisIsNotConnect
+import com.iotserv.exceptions.AuthorizationException
+import com.iotserv.exceptions.ExposedException
+import com.iotserv.exceptions.TokenException
 import io.github.crackthecodeabhi.kreds.connection.KredsConnectionException
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 fun Application.configureStatusPages() {
     install(StatusPages) {
@@ -19,11 +16,19 @@ fun Application.configureStatusPages() {
             call.respondText(status = HttpStatusCode.BadRequest, text = cause.reasons.single())
         }
         exception<KredsConnectionException> { call, cause ->
-            MailCooker.sendMessageWithServerWarnings(cause.message.toString())
-            call.respondText(status = HttpStatusCode.InternalServerError, text = redisIsNotConnect)
+            call.respondText(status = HttpStatusCode.InternalServerError, text = cause.message.toString())
         }
         exception<NumberFormatException> {call, cause ->
             call.respondText(status = HttpStatusCode.BadRequest, text = cause.message.toString())
+        }
+        exception<AuthorizationException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.getFullDescription())
+        }
+        exception<TokenException> {call, cause ->
+            call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
+        }
+        exception<ExposedException> {call, cause ->
+            call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
         }
     }
 }

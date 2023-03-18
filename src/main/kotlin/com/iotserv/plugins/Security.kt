@@ -1,11 +1,14 @@
 package com.iotserv.plugins
 
+import com.iotserv.exceptions.TokenException
 import com.iotserv.utils.JwtCooker
-import io.ktor.http.*
+import com.iotserv.utils.RoutesResponses.tokenIsNotValidOrHasExpired
+import com.iotserv.utils.RoutesResponses.tokenIsNotValidOrHasExpiredCode
+import com.iotserv.utils.RoutesResponses.uuidWasNotFound
+import com.iotserv.utils.RoutesResponses.uuidWasNotFoundCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
 
 fun Application.configureSecurity() {
@@ -16,12 +19,12 @@ fun Application.configureSecurity() {
             verifier(jwtCooker.verifyToken())
 
             validate {
-                if (jwtCooker.validate(it))     JWTPrincipal(it.payload)
-                else                            null
+                if (it.payload.getClaim("id") != null)  JWTPrincipal(it.payload)
+                else                                           throw TokenException(uuidWasNotFoundCode, uuidWasNotFound)
             }
 
             challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+                throw TokenException(tokenIsNotValidOrHasExpiredCode, tokenIsNotValidOrHasExpired)
             }
         }
     }

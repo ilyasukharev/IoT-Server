@@ -4,14 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommonDeviceData(
-    val deviceId: ULong,
+    val deviceId: Long,
     val deviceName: String,
     val deviceDescription: String,
 )
 
 @Serializable
-data class DetailsDeviceData (
-    val deviceId: ULong,
+data class DetailDeviceData (
+    val deviceId: Long,
     val deviceName: String,
     val sensorsState: HashMap<String, String>,
 )
@@ -24,7 +24,7 @@ data class ChangeDeviceData (
 
 @Serializable
 data class ClientManagementResponseData (
-    val msg: String,
-    val deviceInfo: DetailsDeviceData? = null,
+    val msg: String? = null,
+    val deviceInfo: DetailDeviceData? = null,
     val deviceListInfo: List<CommonDeviceData>? = null,
 )

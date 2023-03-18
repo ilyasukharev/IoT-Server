@@ -1,5 +1,6 @@
 package com.iotserv.plugins
 
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.application.*
@@ -11,6 +12,7 @@ fun Application.configureSerialization() {
             Json {
                 isLenient = true
                 ignoreUnknownKeys = true
+                serializersModule = KompendiumSerializersModule.module
             }
         )
     }
