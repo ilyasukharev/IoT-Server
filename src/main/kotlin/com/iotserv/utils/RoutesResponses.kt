@@ -10,7 +10,6 @@ object RoutesResponses {
     const val boardConnected = "Board connected"
     const val codeIsRight = "Code is right"
     const val codeIsWrong = "Code is wrong"
-    const val passwordWasSuccessfullyChanged = "Password was successfully changed"
     const val dataWasSuccessfullyChanged = "Data was successfully changed"
     const val incorrectEmailFormat = "Incorrect email format"
     const val incorrectEmailLength = "Incorrect email length"
@@ -70,9 +69,9 @@ object RoutesResponses {
     const val suchBoardUUIDIsNotExists = "Such board UUID is not exists"
 
     //Token [ET]
-    const val tokenIsNotValidOrHasExpiredCode = "EA01"
-    const val uuidWasNotFoundCode = "EA02"
-    const val tokenTypeIsMissingCode = "EA03"
+    const val tokenIsNotValidOrHasExpiredCode = "ET01"
+    const val uuidWasNotFoundCode = "ET02"
+    const val tokenTypeIsMissingCode = "ET03"
 
     const val tokenIsNotValidOrHasExpired = "Token is not valid or has expired"
     const val uuidWasNotFound = "UUID was not found"

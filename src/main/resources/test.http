@@ -3,7 +3,7 @@ POST http://192.168.0.107:8080/code/send
 Content-Type: application/json
 
 {
-  "email": ""
+  "email": "ziomki@yandex.ru"
 }
 
 ###
@@ -11,8 +11,8 @@ POST http://192.168.0.107:8080/code/verify
 Content-Type: application/json
 
 {
-  "email": "",
-  "code": ""
+  "email": "ziomki@yandex.ru",
+  "code": "670802"
 }
 
 ###
@@ -20,9 +20,8 @@ POST http://192.168.0.107:8080/account/register
 Content-Type: application/json
 
 {
-  "number": "",
-  "email": "",
-  "password": ""
+  "email": "ziomki@yandex.ru",
+  "password": "ilya123321"
 }
 
 ###
@@ -44,8 +43,8 @@ Content-Type: application/json
 }
 
 ###
-GET http://192.168.0.106:8080/token/update
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc4NjE1NTY5fQ.WAd4wypjP4q43qqSR9LlfKPOV3tAQXZnCRikNUwBRrY
+GET http://192.168.0.107:8080/token/update
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc5MjQxODIxfQ.ZLo1-K9eTps7N1DAaj8XoPUPY4T5oLoKb9ICxbU_PxI
 
 ###
 POST http://192.168.0.106:8080/management/user/sensors/change/7
@@ -58,5 +57,5 @@ Content-Type: application/json
 }
 
 ###
-GET http://192.168.0.106:8080/management/user/devices/1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNjo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA2OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc4ODk0Mjg2fQ.GumSW5S6qsAJOdBzZd46IWNRlbeuXcH2BkNv3QPMa0o
+GET http://192.168.0.107:8080/management/user/devices
+Authorization: Bearer

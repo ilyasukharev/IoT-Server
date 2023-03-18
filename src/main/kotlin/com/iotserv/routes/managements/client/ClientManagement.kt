@@ -40,6 +40,7 @@ fun Route.clientManagementRoutes() {
     val kredsClient by inject<KredsClient>()
 
     authenticate("desktop-app") {
+        getDevicesDoc()
         get<Devices> {
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val id = payload.getClaim("id").asLong()
@@ -58,7 +59,9 @@ fun Route.clientManagementRoutes() {
                 }
             }
         }
+        getDetailDeviceDoc()
         get<Devices.Id> { device ->
+
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val userId = payload.getClaim("id").asLong()
 
@@ -73,6 +76,8 @@ fun Route.clientManagementRoutes() {
                 }
             }
         }
+
+        getChangeDeviceDoc()
         post<Devices.Id.Change> { device ->
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val userId = payload.getClaim("id").asLong()

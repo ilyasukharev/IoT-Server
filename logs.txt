@@ -1,0 +1,12 @@
+[2023-03-18 18:51:55]:DESKTOP-KM9D0BG - Sending email with verify code
+[2023-03-18 19:03:25]:DESKTOP-KM9D0BG - Sending email with verify code
+[2023-03-18 19:03:36]:DESKTOP-KM9D0BG - Code is right
+[2023-03-18 19:03:41]:DESKTOP-KM9D0BG - Successfully registered
+[2023-03-18 19:09:45]:ID:1 - Token type is missing
+[2023-03-18 19:10:22]:ID:1 - Access token was updated
+[2023-03-18 19:10:26]:ID:1 - Access token was updated
+[2023-03-18 19:19:45]:ID:1 - Access token was updated
+[2023-03-18 19:19:50]:ID:1 - Access token was updated
+[2023-03-18 19:20:57]:ID:1 - List was sent
+[2023-03-18 19:24:13]:ID:1 - List was sent
+[2023-03-18 19:25:59]:ID:1 - List was sent

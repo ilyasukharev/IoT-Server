@@ -21,8 +21,9 @@ fun Route.configureAuthenticate() {
     val logger by inject<Logger>()
 
     authenticate ("desktop-app") {
-        route("/token") {
-            get("/update") {
+        route("/token/update") {
+            documentation()
+            get {
                 call.principal<JWTPrincipal>()!!.payload.let {payload ->
                     val id = payload.getClaim("id").asLong()
                     payload.getClaim("type")?.asString().let {
@@ -38,5 +39,4 @@ fun Route.configureAuthenticate() {
             }
         }
     }
-
 }

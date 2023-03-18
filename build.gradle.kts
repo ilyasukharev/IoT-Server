@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -10,7 +12,7 @@ val apache_email_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.7.22"
-    id("io.ktor.plugin") version "2.2.2"
+    id("io.ktor.plugin") version "2.2.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.7.22"
 }
 
@@ -27,7 +29,12 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "17"
+}
+
 dependencies {
+    implementation ("io.bkbn:kompendium-resources:latest.release")
     implementation("io.bkbn:kompendium-core:latest.release")
     implementation("org.apache.commons:commons-email:$apache_email_version")
     implementation("io.ktor:ktor-server-request-validation:$ktor_version")

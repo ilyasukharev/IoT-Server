@@ -8,7 +8,6 @@ import com.iotserv.routes.identities.authorization.isClientAuthenticated
 import com.iotserv.utils.RoutesResponses.clientIsNotAuthenticated
 import com.iotserv.utils.RoutesResponses.clientIsNotAuthenticatedCode
 import com.iotserv.utils.RoutesResponses.dataWasSuccessfullyChanged
-import com.iotserv.utils.RoutesResponses.passwordWasSuccessfullyChanged
 import com.iotserv.utils.RoutesResponses.userNotFound
 import com.iotserv.utils.RoutesResponses.userNotFoundCode
 import com.iotserv.utils.logger.Logger
@@ -31,16 +30,13 @@ fun Route.personalDataRoutes() {
 
     authenticate("desktop-app") {
         route("/account/change") {
+            changeUserData()
+
             post {
                 val data = call.receive<PersonalData>()
 
                 call.principal<JWTPrincipal>()!!.payload.let { payload ->
                     val id = payload.getClaim("id").asLong()
-
-                    if (!isClientAuthenticated(kredsClient, data.email)) {
-                        logger.writeLog(clientIsNotAuthenticated, "$id", SenderType.ID)
-                        throw AuthorizationException(clientIsNotAuthenticatedCode, clientIsNotAuthenticated)
-                    }
 
                     if (!personalDataManagementDao.updateAll(id, data)) {
                         logger.writeLog(userNotFound, "$id", SenderType.ID)
@@ -55,8 +51,9 @@ fun Route.personalDataRoutes() {
     }
 
     route("/account/change/password") {
+        changeUserPassword()
         post {
-            val data = call.receive<ChangePasswordData>()
+            val data = call.receive<PersonalData>()
             val clientIp = call.request.origin.remoteHost
 
             if (!isClientAuthenticated(kredsClient, data.email)) {
@@ -68,8 +65,8 @@ fun Route.personalDataRoutes() {
                 logger.writeLog(userNotFound, clientIp, SenderType.IP_ADDRESS)
                 throw ExposedException(userNotFoundCode, userNotFound, listOf("userIp: $clientIp"))
             } else {
-                logger.writeLog(passwordWasSuccessfullyChanged, clientIp, SenderType.IP_ADDRESS)
-                call.respond(HttpStatusCode.OK, PersonalResponseData(passwordWasSuccessfullyChanged))
+                logger.writeLog(dataWasSuccessfullyChanged, clientIp, SenderType.IP_ADDRESS)
+                call.respond(HttpStatusCode.OK, PersonalResponseData(dataWasSuccessfullyChanged))
             }
         }
     }

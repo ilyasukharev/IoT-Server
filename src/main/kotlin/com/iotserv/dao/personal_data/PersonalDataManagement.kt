@@ -16,7 +16,7 @@ interface PersonalDataManagement {
     suspend fun isPasswordCorrect(data: LoginData): Boolean
     suspend fun isUserExists(email: String): Boolean
     suspend fun isUserExists(id: Long): Boolean
-    suspend fun getId(email: String) : Long
+    suspend fun getUserIdAndPassword(email: String): UsersIdAndPasswordData
     suspend fun updatePassword(email: String, password: String): Boolean
     suspend fun updateAll(id: Long, data: PersonalData): Boolean
 }
@@ -49,12 +49,14 @@ class PersonalDataManagementIMPL : PersonalDataManagement {
             PersonalDataTable.id eq id
         }.limit(1).singleOrNull() != null
     }
-
-    override suspend fun getId(email: String): Long = dbQuery {
+    override suspend fun getUserIdAndPassword (email: String): UsersIdAndPasswordData = dbQuery{
         PersonalDataManager.find {
-            PersonalDataTable.email eq email
-        }.limit(1).singleOrNull()?.id?.value
-            ?: throw ExposedException(userNotFoundCode, userNotFound, listOf(email))
+                PersonalDataTable.email eq email
+            }.singleOrNull()?.let {
+            UsersIdAndPasswordData (
+                it.id.value,
+                it.password
+            ) } ?: throw ExposedException(userNotFoundCode, userNotFound, listOf(email))
     }
 
     override suspend fun updatePassword(email: String, password: String): Boolean = dbQuery {

@@ -1,8 +1,6 @@
 package com.iotserv.plugins
 
-import com.iotserv.exceptions.AuthorizationException
-import com.iotserv.exceptions.ExposedException
-import com.iotserv.exceptions.TokenException
+import com.iotserv.exceptions.*
 import io.github.crackthecodeabhi.kreds.connection.KredsConnectionException
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -28,6 +26,12 @@ fun Application.configureStatusPages() {
             call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
         }
         exception<ExposedException> {call, cause ->
+            call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
+        }
+        exception<MailDeliverException> {call, cause ->
+            call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
+        }
+        exception<OtherException> { call, cause ->
             call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
         }
     }

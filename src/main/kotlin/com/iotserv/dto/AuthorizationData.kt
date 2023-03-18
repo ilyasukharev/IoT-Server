@@ -30,4 +30,9 @@ data class VerificationCodeData(
     val code: Int
 )
 
+data class UsersIdAndPasswordData (
+    val id: Long,
+    val password: String,
+)
+
 

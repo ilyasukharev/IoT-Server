@@ -42,6 +42,7 @@ fun Route.authorizationRoutes() {
 
     route("/account") {
         route("/register") {
+            registerDoc()
             post {
                 val data = call.receive<RegistrationData>()
                 val clientIp = call.request.origin.remoteHost
@@ -70,27 +71,28 @@ fun Route.authorizationRoutes() {
         }
 
         route("/login") {
+            loginDoc()
             post {
                 val data = call.receive<LoginData>()
                 val clientIp = call.request.origin.remoteHost
 
-                if (!personalDataManagementDao.isPasswordCorrect(data)) {
-                    logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
-                    throw AuthorizationException (
-                        userNotFoundOrPasswordIsIncorrectCode,
-                        userNotFoundOrPasswordIsIncorrect,
-                        listOf("user: ${data.email}", "password: ${data.password}")
-                    )
-                }
+                personalDataManagementDao.getUserIdAndPassword(data.email).let {dbData ->
+                    if (data.password != dbData.password) {
+                        logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
+                        throw AuthorizationException (
+                            userNotFoundOrPasswordIsIncorrectCode,
+                            userNotFoundOrPasswordIsIncorrect,
+                            listOf("user: ${data.email}", "password: ${data.password}")
+                        )
+                    }
 
-                personalDataManagementDao.getId(data.email).let {userId ->
                     logger.writeLog(authorizationHasBeenCompleted, clientIp, SenderType.IP_ADDRESS)
                     call.respond(
                         HttpStatusCode.Accepted,
                         AuthorizationResponseData (
                             authorizationHasBeenCompleted,
-                            jwtCooker.buildAccessJwt(userId),
-                            jwtCooker.buildRefreshJwt(userId)
+                            jwtCooker.buildAccessJwt(dbData.id),
+                            jwtCooker.buildRefreshJwt(dbData.id)
                         )
                     )
                 }

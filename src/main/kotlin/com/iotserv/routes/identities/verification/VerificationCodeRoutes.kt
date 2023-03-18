@@ -28,48 +28,56 @@ fun Route.verificationCodeRoutes() {
     val logger by inject<Logger>()
 
     route("/code") {
-        post("/send") {
-            val email = call.receive<EmailData>().email
+        route("/send") {
+            sendingCodeDoc()
+            
+            post {
+                val email = call.receive<EmailData>().email
 
-            MailCooker.generateRandomCode().let { generatedCode ->
-                launch {
-                    logger.writeLog(sendingEmailWithVerifyCode, call.request.origin.remoteHost, SenderType.IP_ADDRESS)
-                    MailCooker.sendResetEmail(email, generatedCode)
+                MailCooker.generateRandomCode().let { generatedCode ->
+                    launch {
+                        logger.writeLog(sendingEmailWithVerifyCode, call.request.origin.remoteHost, SenderType.IP_ADDRESS)
+                        MailCooker.sendResetEmail(email, generatedCode)
+                    }
+
+                    kredsClient.use { redis ->
+                        redis.set("$email:verificationCode", "$generatedCode")
+                        redis.expire("$email:verificationCode", 1000U)
+                    }
+                    call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(verifyCodeWasSent))
                 }
 
-                kredsClient.use { redis ->
-                    redis.set("$email:verificationCode", "$generatedCode")
-                    redis.expire("$email:verificationCode", 1000U)
-                }
-                call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(verifyCodeWasSent))
             }
-
         }
-        post("/verify") {
-            val data = call.receive<VerificationCodeData>()
-            val clientIp = call.request.origin.remoteHost
+        route("/verify") {
+            verifyCodeDoc()
 
-            kredsClient.use { redis ->
-                redis.get("${data.email}:verificationCode")
-            }?.let { rightCode ->
-
-                if (rightCode.toInt() != data.code) {
-                    logger.writeLog(codeIsWrong, clientIp, SenderType.IP_ADDRESS)
-                    throw AuthorizationException (confirmCodeIsNotRightCode, confirmCodeIsNotRight, listOf("Incorrect code: ${data.code}"))
-                }
+            post {
+                val data = call.receive<VerificationCodeData>()
+                val clientIp = call.request.origin.remoteHost
 
                 kredsClient.use { redis ->
-                    redis.del("${data.email}:verificationCode")
-                    redis.set("${data.email}:authorization", "true")
-                    redis.expire("${data.email}:authorization", 1000U)
+                    redis.get("${data.email}:verificationCode")
+                }?.let { rightCode ->
+
+                    if (rightCode.toInt() != data.code) {
+                        logger.writeLog(codeIsWrong, clientIp, SenderType.IP_ADDRESS)
+                        throw AuthorizationException (confirmCodeIsNotRightCode, confirmCodeIsNotRight, listOf("Incorrect code: ${data.code}"))
+                    }
+
+                    kredsClient.use { redis ->
+                        redis.del("${data.email}:verificationCode")
+                        redis.set("${data.email}:authorization", "true")
+                        redis.expire("${data.email}:authorization", 1000U)
+                    }
+
+                    logger.writeLog(codeIsRight, clientIp, SenderType.IP_ADDRESS)
+                    call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(codeIsRight))
+
+                } ?: run {
+                    logger.writeLog(connectionTimeWasUp, clientIp, SenderType.IP_ADDRESS)
+                    throw AuthorizationException(connectionTimeWasUpCode, connectionTimeWasUp)
                 }
-
-                logger.writeLog(codeIsRight, clientIp, SenderType.IP_ADDRESS)
-                call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(codeIsRight))
-
-            } ?: run {
-                logger.writeLog(connectionTimeWasUp, clientIp, SenderType.IP_ADDRESS)
-                throw AuthorizationException(connectionTimeWasUpCode, connectionTimeWasUp)
             }
         }
     }
