@@ -4,8 +4,8 @@ import com.iotserv.exceptions.TokenException
 import com.iotserv.utils.JwtCooker
 import com.iotserv.utils.RoutesResponses.tokenIsNotValidOrHasExpired
 import com.iotserv.utils.RoutesResponses.tokenIsNotValidOrHasExpiredCode
-import com.iotserv.utils.RoutesResponses.uuidWasNotFound
-import com.iotserv.utils.RoutesResponses.uuidWasNotFoundCode
+import com.iotserv.utils.RoutesResponses.tokenPayloadIdWasNotFound
+import com.iotserv.utils.RoutesResponses.tokenPayloadIdWasNotFoundCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -20,7 +20,7 @@ fun Application.configureSecurity() {
 
             validate {
                 if (it.payload.getClaim("id") != null)  JWTPrincipal(it.payload)
-                else                                           throw TokenException(uuidWasNotFoundCode, uuidWasNotFound)
+                else                                           throw TokenException(tokenPayloadIdWasNotFoundCode, tokenPayloadIdWasNotFound)
             }
 
             challenge { _, _ ->

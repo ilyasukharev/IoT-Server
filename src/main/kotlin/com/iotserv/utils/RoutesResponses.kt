@@ -70,11 +70,11 @@ object RoutesResponses {
 
     //Token [ET]
     const val tokenIsNotValidOrHasExpiredCode = "ET01"
-    const val uuidWasNotFoundCode = "ET02"
+    const val tokenPayloadIdWasNotFoundCode = "ET02"
     const val tokenTypeIsMissingCode = "ET03"
 
     const val tokenIsNotValidOrHasExpired = "Token is not valid or has expired"
-    const val uuidWasNotFound = "UUID was not found"
+    const val tokenPayloadIdWasNotFound = "UUID was not found"
     const val tokenTypeIsMissing = "Token type is missing"
 
     //MailDeliverException [EMD]
@@ -94,9 +94,9 @@ object RoutesResponses {
     const val suchBoardIsListening = "Such board is listening"
 
 
-    //OtherException [OE]
-    const val deviceIsNotListeningCode = "OE01"
-    const val arrivedStateOfTypeIsNotCorrectCode = "OE02"
+    //OtherException [EO]
+    const val deviceIsNotListeningCode = "EO01"
+    const val arrivedStateOfTypeIsNotCorrectCode = "EO02"
 
     const val deviceIsNotListening = "Device is not listening"
     const val arrivedStateOfTypeIsNotCorrect = "Arrived state of type is not correct"
