@@ -12,7 +12,7 @@ import io.ktor.server.routing.*
 
 fun Route.getDevicesDoc() {
     install(NotarizedResource<Devices>()) {
-        tags = setOf("Управление")
+        tags = setOf("Управление клиентскими устройствами")
         get = GetInfo.builder {
             summary("Получение всех пользовательских устройств")
             description("Маршрут предназначен для получения всех пользовательских устройств")
@@ -32,7 +32,7 @@ fun Route.getDevicesDoc() {
 
 fun Route.getDetailDeviceDoc() {
     install(NotarizedResource<Devices.Id>()) {
-        tags = setOf("Управление")
+        tags = setOf("Управление клиентскими устройствами")
         parameters = listOf (
             Parameter(name="id", `in` = Parameter.Location.path, schema = TypeDefinition.LONG)
         )

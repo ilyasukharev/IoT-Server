@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: iot-server
     build: .
     volumes:
       - ./logs.txt:/logs.txt
@@ -9,6 +10,7 @@ services:
       db:
         condition: service_healthy
   db:
+    container_name: iot-postgres
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -24,6 +26,7 @@ services:
       timeout: 1s
       retries: 50
   redis:
+    container_name: iot-redis
     image: redis:latest
 #    volumes:
 #      - data:/data
