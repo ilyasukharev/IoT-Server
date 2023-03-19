@@ -1,5 +1,5 @@
 
-POST http://192.168.0.107:8080/code/send
+POST http://localhost:8000/code/send
 Content-Type: application/json
 
 {
@@ -7,16 +7,16 @@ Content-Type: application/json
 }
 
 ###
-POST http://192.168.0.107:8080/code/verify
+POST http://localhost:8000/code/verify
 Content-Type: application/json
 
 {
   "email": "ziomki@yandex.ru",
-  "code": "670802"
+  "code": "646891"
 }
 
 ###
-POST http://192.168.0.107:8080/account/register
+POST http://localhost:8000/account/register
 Content-Type: application/json
 
 {

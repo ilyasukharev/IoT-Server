@@ -4,8 +4,6 @@ import com.iotserv.dao.device_definition.DeviceDefinitionTable
 import com.iotserv.dao.device_structure.DeviceStructureTable
 import com.iotserv.dao.personal_data.PersonalDataTable
 import com.iotserv.dao.users_devices.UserDevicesTable
-import com.typesafe.config.ConfigFactory
-import io.ktor.server.application.*
 import io.ktor.server.config.*
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
@@ -15,9 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 
 object DatabaseFactory {
-    private val config = HoconApplicationConfig(ConfigFactory.load())
-
-    fun initPostgreSQL() {
+    fun initPostgreSQL(config: ApplicationConfig) {
         val defaultPropertyUrl = "databases.postgres"
 
         val url = config.property("$defaultPropertyUrl.url").getString()

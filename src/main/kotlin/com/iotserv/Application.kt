@@ -17,5 +17,5 @@ fun Application.module() {
     configureValidator()
     configureStatusPages()
 
-    DatabaseFactory.initPostgreSQL()
+    DatabaseFactory.initPostgreSQL(environment.config)
 }

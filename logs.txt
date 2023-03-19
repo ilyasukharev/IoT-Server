@@ -10,3 +10,8 @@
 [2023-03-18 19:20:57]:ID:1 - List was sent
 [2023-03-18 19:24:13]:ID:1 - List was sent
 [2023-03-18 19:25:59]:ID:1 - List was sent
+[2023-03-19 10:01:25]:_gateway - Sending email with verify code
+[2023-03-19 10:02:09]:_gateway - Code is wrong
+[2023-03-19 10:02:22]:_gateway - Code is right
+[2023-03-19 10:02:52]:_gateway - Successfully registered
+[2023-03-19 10:07:45]:_gateway - Client is not authenticated

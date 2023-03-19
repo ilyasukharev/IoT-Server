@@ -29,6 +29,12 @@ repositories {
     mavenCentral()
 }
 
+ktor {
+    fatJar {
+        archiveFileName.set("iot-server.jar")
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }
