@@ -27,7 +27,7 @@ fun Route.registerDoc() {
                 responseType<AuthorizationResponseData>()
             }
             canRespond {
-                description("ET01, ET02, EA04, EA03")
+                description("EA03, EA04")
                 responseCode(HttpStatusCode.InternalServerError)
                 responseType<CustomExceptionsData>()
             }
@@ -51,7 +51,7 @@ fun Route.loginDoc() {
                 responseType<AuthorizationResponseData>()
             }
             canRespond {
-                description("ET01, ET02, EA05, EE03")
+                description("EA03, EE05")
                 responseCode(HttpStatusCode.InternalServerError)
                 responseType<CustomExceptionsData>()
             }
