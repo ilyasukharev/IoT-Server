@@ -20,7 +20,7 @@ fun Application.configureStatusPages() {
             call.respondText(status = HttpStatusCode.BadRequest, text = cause.message.toString())
         }
         exception<AuthorizationException> { call, cause ->
-            call.respond(HttpStatusCode.BadRequest, cause.getFullDescription())
+            call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
         }
         exception<TokenException> {call, cause ->
             call.respond(HttpStatusCode.InternalServerError, cause.getFullDescription())
