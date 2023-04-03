@@ -1,31 +1,31 @@
 
-POST http://localhost:8000/code/send
+POST http://192.168.0.107:8000/code/send
 Content-Type: application/json
 
 {
-  "email": "ziomki@yandex.ru"
+  "email": "sttich07@gmail.com"
 }
 
 ###
-POST http://localhost:8000/code/verify
+POST http://192.168.0.107:8000/code/verify
 Content-Type: application/json
 
 {
-  "email": "ziomki@yandex.ru",
-  "code": "646891"
+  "email": "sttich07@gmail.com",
+  "code": 853238
 }
 
 ###
-POST http://localhost:8000/account/register
+POST http://192.168.0.107:8000/account/register
 Content-Type: application/json
 
 {
-  "email": "ziomki@yandex.ru",
+  "email": "sttich07@gmail.com",
   "password": "ilya123321"
 }
 
 ###
-POST http://192.168.0.106:8080/account/login
+POST http://192.168.0.107:8000/account/login
 Content-Type: application/json
 
 {
@@ -47,15 +47,19 @@ GET http://192.168.0.107:8080/token/update
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc5MjQxODIxfQ.ZLo1-K9eTps7N1DAaj8XoPUPY4T5oLoKb9ICxbU_PxI
 
 ###
-POST http://192.168.0.106:8080/management/user/sensors/change/7
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNjo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA2OjgwODAvIiwiaWQiOjEsImV4cCI6MTY3NjgyMTc5NX0.OqaFS0KoSCxdrt-sApn13vefHaCjhxmqUID-zNuhdpU
+POST http://192.168.0.107:8000/management/user/devices/1/change
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDAwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwMDAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjgwNjI1OTY3fQ.BEIUX2Ywea4UP5Kod7o60Hzmp0GeQHEJbTDACb8MQKo
 Content-Type: application/json
 
 {
-  "sensor": "Мотор",
+  "sensor": "Мотор вверх",
   "state": "false"
 }
 
 ###
 GET http://192.168.0.107:8080/management/user/devices
 Authorization: Bearer
+
+###
+GET http://192.168.0.107:8000/management/user/devices/3/reset
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDAwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwMDAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjgwNjI1OTY3fQ.BEIUX2Ywea4UP5Kod7o60Hzmp0GeQHEJbTDACb8MQKo

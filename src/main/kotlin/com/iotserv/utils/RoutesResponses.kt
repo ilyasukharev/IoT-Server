@@ -35,6 +35,7 @@ object RoutesResponses {
     const val deviceStateHasBeenUpdated = "Device state has been updated"
     const val updateIsNull = "Update is null"
     const val accessTokenWasUpdated = "Access token was updated"
+    const val deviceListeningStateWasReset = "Device listening state was reset"
 
     //Exceptions
 
@@ -43,13 +44,13 @@ object RoutesResponses {
     const val connectionTimeWasUpCode = "EA02"
     const val userAlreadyExistsCode = "EA03"
     const val clientIsNotAuthenticatedCode = "EA04"
-    const val userNotFoundOrPasswordIsIncorrectCode = "EA05"
+    const val passwordIsIncorrectCode = "EA05"
 
     const val confirmCodeIsNotRight = "Confirm code is not right"
     const val connectionTimeWasUp = "Connection time to confirm code was up"
     const val userAlreadyExists = "User already exists"
     const val clientIsNotAuthenticated = "Client is not authenticated"
-    const val userNotFoundOrPasswordIsIncorrect = "User not found or password is incorrect"
+    const val passwordIsIncorrect = "Password is incorrect"
 
     //Exposed [EE]
     const val deviceWasNotFoundCode = "EE01"

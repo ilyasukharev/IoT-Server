@@ -46,12 +46,12 @@ fun Route.loginDoc() {
                 requestType<LoginData>()
             }
             response {
-                description("Возвращает два токена: access и refresh")
+                description("Возвращает два токена: access и refresh и сообщение 'Authorization has been completed'")
                 responseCode(HttpStatusCode.Accepted)
                 responseType<AuthorizationResponseData>()
             }
             canRespond {
-                description("EA03, EE05")
+                description("EA03, EA05")
                 responseCode(HttpStatusCode.InternalServerError)
                 responseType<CustomExceptionsData>()
             }

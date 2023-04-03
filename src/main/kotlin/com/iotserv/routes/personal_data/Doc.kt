@@ -20,7 +20,7 @@ fun Route.changeUserData() {
                 requestType<PersonalData>()
             }
             response {
-                description("Вернет сообщение data was successfully changed")
+                description("Вернет сообщение 'Data was successfully changed'")
                 responseCode(HttpStatusCode.Accepted)
                 responseType<PersonalResponseData>()
             }
@@ -44,8 +44,8 @@ fun Route.changeUserPassword() {
                 requestType<PersonalData>()
             }
             response {
-                description("Вернет сообщение data was successfully changed")
-                responseCode(HttpStatusCode.Accepted)
+                description("Вернет сообщение 'Data was successfully changed'")
+                responseCode(HttpStatusCode.OK)
                 responseType<PersonalResponseData>()
             }
             canRespond {

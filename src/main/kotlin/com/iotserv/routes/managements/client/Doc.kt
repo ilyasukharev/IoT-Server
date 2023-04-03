@@ -76,3 +76,26 @@ fun Route.getChangeDeviceDoc() {
         }
     }
 }
+
+fun Route.getResetDeviceStateDoc() {
+    install(NotarizedResource<Devices.Id.Reset>()) {
+        tags = setOf("Управление клиентскими устройствами")
+        parameters = listOf (
+            Parameter(name="id", `in` = Parameter.Location.path, schema = TypeDefinition.LONG)
+        )
+        get = GetInfo.builder {
+            summary("Сброс состояния активности устройства")
+            description("Принудительное прерывание состояния активного прослушивания устройства сервером")
+            response {
+                description("Возвращает сообщение 'Device listening state was reset'")
+                responseCode(HttpStatusCode.OK)
+                responseType<ClientManagementResponseData>()
+            }
+            canRespond {
+                description("ET01, ET02, EE04")
+                responseCode(HttpStatusCode.InternalServerError)
+                responseType<CustomExceptionsData>()
+            }
+        }
+    }
+}

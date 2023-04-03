@@ -6,6 +6,8 @@ import io.ktor.resources.*
 class Devices {
     @Resource("/{id}")
     class Id (val parent: Devices = Devices(), val id: Long) {
+        @Resource("/reset")
+        class Reset (val parent: Id)
         @Resource("/change")
         class Change (val parent: Id)
     }

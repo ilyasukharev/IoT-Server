@@ -16,6 +16,7 @@ import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.security.BasicAuth
+import io.github.crackthecodeabhi.kreds.connection.KredsClient
 import io.ktor.http.*
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -33,6 +34,12 @@ suspend fun transactException(msg: String, ip: Any, logger: Logger, socket: WebS
     logger.writeLog(msg, ip.toString(), senderType)
     socket.send(msg)
     socket.close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, msg))
+}
+
+suspend fun isClientAuthenticated(redis: KredsClient, email: String): Boolean {
+    redis.use {
+        return it.get("${email}:authorization") == "true"
+    }
 }
 
 fun Application.configureRouting() {

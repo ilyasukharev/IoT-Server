@@ -4,7 +4,7 @@ import com.iotserv.dao.personal_data.PersonalDataManagement
 import com.iotserv.dto.*
 import com.iotserv.exceptions.AuthorizationException
 import com.iotserv.exceptions.ExposedException
-import com.iotserv.routes.identities.authorization.isClientAuthenticated
+import com.iotserv.plugins.isClientAuthenticated
 import com.iotserv.utils.RoutesResponses.clientIsNotAuthenticated
 import com.iotserv.utils.RoutesResponses.clientIsNotAuthenticatedCode
 import com.iotserv.utils.RoutesResponses.dataWasSuccessfullyChanged

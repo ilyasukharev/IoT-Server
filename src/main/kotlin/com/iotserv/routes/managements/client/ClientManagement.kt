@@ -14,6 +14,7 @@ import com.iotserv.utils.DeviceSensorsHandler.getUpdateState
 import com.iotserv.utils.RoutesResponses.deviceDataWasSent
 import com.iotserv.utils.RoutesResponses.deviceIsNotListening
 import com.iotserv.utils.RoutesResponses.deviceIsNotListeningCode
+import com.iotserv.utils.RoutesResponses.deviceListeningStateWasReset
 import com.iotserv.utils.RoutesResponses.deviceStateHasBeenUpdated
 import com.iotserv.utils.RoutesResponses.deviceStateHasNotBeenUpdated
 import com.iotserv.utils.RoutesResponses.deviceStateHasNotBeenUpdatedCode
@@ -114,6 +115,23 @@ fun Route.clientManagementRoutes() {
 
                     logger.writeLog(deviceStateHasBeenUpdated, "$userId", SenderType.ID)
                     call.respond(HttpStatusCode.OK, ClientManagementResponseData(msg = deviceStateHasBeenUpdated))
+                }
+            }
+        }
+        getResetDeviceStateDoc()
+        get<Devices.Id.Reset> {device ->
+            call.principal<JWTPrincipal>()!!.payload.let { payload ->
+                val userId = payload.getClaim("id").asLong()
+
+                userDeviceDao.get(
+                    userId,
+                    device.parent.id
+                ).let {deviceData ->
+                    kredsClient.use { redis ->
+                        redis.del("${deviceData.boardId}:isListening")
+                    }
+                    logger.writeLog(deviceListeningStateWasReset, "$userId", SenderType.ID)
+                    call.respond(HttpStatusCode.OK, ClientManagementResponseData(msg = deviceListeningStateWasReset))
                 }
             }
         }

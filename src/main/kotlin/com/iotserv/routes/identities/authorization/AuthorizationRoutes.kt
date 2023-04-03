@@ -3,15 +3,16 @@ package com.iotserv.routes.identities.authorization
 import com.iotserv.dao.personal_data.PersonalDataManagement
 import com.iotserv.dto.*
 import com.iotserv.exceptions.AuthorizationException
+import com.iotserv.plugins.isClientAuthenticated
 import com.iotserv.utils.JwtCooker
 import com.iotserv.utils.RoutesResponses.authorizationHasBeenCompleted
 import com.iotserv.utils.RoutesResponses.clientIsNotAuthenticated
 import com.iotserv.utils.RoutesResponses.clientIsNotAuthenticatedCode
+import com.iotserv.utils.RoutesResponses.passwordIsIncorrect
+import com.iotserv.utils.RoutesResponses.passwordIsIncorrectCode
 import com.iotserv.utils.RoutesResponses.successfullyRegistered
 import com.iotserv.utils.RoutesResponses.userAlreadyExists
 import com.iotserv.utils.RoutesResponses.userAlreadyExistsCode
-import com.iotserv.utils.RoutesResponses.userNotFoundOrPasswordIsIncorrect
-import com.iotserv.utils.RoutesResponses.userNotFoundOrPasswordIsIncorrectCode
 import com.iotserv.utils.logger.Logger
 import com.iotserv.utils.logger.SenderType
 import io.github.crackthecodeabhi.kreds.connection.KredsClient
@@ -22,17 +23,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-
-suspend fun isClientAuthenticated(redis: KredsClient, email: String): Boolean {
-    redis.use {
-        if (it.get("${email}:authorization") != "true") {
-            return false
-        } else {
-            it.del("${email}:authorization")
-            return true
-        }
-    }
-}
 
 fun Route.authorizationRoutes() {
     val jwtCooker by inject<JwtCooker>()
@@ -78,10 +68,10 @@ fun Route.authorizationRoutes() {
 
                 personalDataManagementDao.getUserIdAndPassword(data.email).let {dbData ->
                     if (data.password != dbData.password) {
-                        logger.writeLog(userNotFoundOrPasswordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
+                        logger.writeLog(passwordIsIncorrect, clientIp, SenderType.IP_ADDRESS)
                         throw AuthorizationException (
-                            userNotFoundOrPasswordIsIncorrectCode,
-                            userNotFoundOrPasswordIsIncorrect,
+                            passwordIsIncorrectCode,
+                            passwordIsIncorrect,
                             listOf("user: ${data.email}", "password: ${data.password}")
                         )
                     }
