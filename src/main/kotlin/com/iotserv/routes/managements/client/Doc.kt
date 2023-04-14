@@ -1,8 +1,10 @@
 package com.iotserv.routes.managements.client
 
+import com.iotserv.dto.ChangeDeviceData
 import com.iotserv.dto.ClientManagementResponseData
 import com.iotserv.exceptions.CustomExceptionsData
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.resources.NotarizedResource
@@ -60,9 +62,13 @@ fun Route.getChangeDeviceDoc() {
         parameters = listOf (
             Parameter(name="id", `in` = Parameter.Location.path, schema = TypeDefinition.LONG)
         )
-        get = GetInfo.builder {
+        post = PostInfo.builder {
             summary("Изменение состояния устройства")
             description("Внесение изменений в текущее состояние пользовательского устройства")
+            request {
+                description("Изменяемые данные устройства")
+                requestType<ChangeDeviceData>()
+            }
             response {
                 description("Возвращает сообщение 'device state has been updated'")
                 responseCode(HttpStatusCode.OK)

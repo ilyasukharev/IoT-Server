@@ -27,7 +27,7 @@ class DeviceStructureIMPL : DeviceStructure {
 
     override suspend fun getSensorType(deviceId: Long, sensorName: String): String = dbQuery {
         DeviceStructureManager.find {
-            (DeviceStructureTable.id eq deviceId) and (DeviceStructureTable.sensorName eq sensorName)
+            (DeviceStructureTable.deviceId eq deviceId) and (DeviceStructureTable.sensorName eq sensorName)
         }.limit(1).singleOrNull()?.sensorStateType
             ?: throw ExposedException(sensorWasNotFoundCode, sensorWasNotFound, listOf(sensorName))
     }

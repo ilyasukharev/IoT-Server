@@ -62,7 +62,7 @@ object RoutesResponses {
     const val suchBoardUUIDIsNotExistsCode = "EE07"
 
     const val deviceWasNotFound = "Device was not found"
-    const val sensorWasNotFound = "Sensor type was not found"
+    const val sensorWasNotFound = "Sensor was not found"
     const val userNotFound = "User not found"
     const val userOrDeviceNotFound = "User or device not found"
     const val suchBoardUUIDAlreadyExists = "Such board UUID already exists"

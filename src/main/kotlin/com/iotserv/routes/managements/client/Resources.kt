@@ -2,7 +2,7 @@ package com.iotserv.routes.managements.client
 
 import io.ktor.resources.*
 
-@Resource("management/user/devices")
+@Resource("/management/user/devices")
 class Devices {
     @Resource("/{id}")
     class Id (val parent: Devices = Devices(), val id: Long) {
