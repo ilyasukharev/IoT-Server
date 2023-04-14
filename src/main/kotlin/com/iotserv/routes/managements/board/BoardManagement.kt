@@ -5,7 +5,7 @@ import com.iotserv.exceptions.ExposedException
 import com.iotserv.exceptions.SocketException
 import com.iotserv.plugins.transactException
 import com.iotserv.routes.connections.receiveJsonData
-import com.iotserv.utils.RoutesResponses
+import com.iotserv.utils.RoutesResponses.commandIsUnknown
 import com.iotserv.utils.RoutesResponses.sendingBoardIDAccepted
 import com.iotserv.utils.RoutesResponses.socketTimeoutResponse
 import com.iotserv.utils.RoutesResponses.suchBoardIsListening
@@ -22,6 +22,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.take
 import org.koin.ktor.ext.inject
 
 private suspend fun stopBoardListening(redis: KredsClient, boardUUID: String) {
@@ -70,6 +71,14 @@ fun Route.boardManagementRoutes() {
             try {
                 pingInterval = null
 
+                incoming.receiveAsFlow().take(1).collect {frame ->
+                    (frame as? Frame.Text)?.let {
+                        if (it.readText() != "connect") throw SocketException (commandIsUnknown)
+
+                    } ?: throw SocketException (commandIsUnknown)
+                }
+
+
                 send(sendingBoardIDAccepted)
                 logger.writeLog(sendingBoardIDAccepted, ip, SenderType.IP_ADDRESS_BOARD)
 
@@ -93,7 +102,7 @@ fun Route.boardManagementRoutes() {
                 launch { traceClientActiveState(channel, this@webSocket, boardUUID, kredsClient) }
 
                 incoming.receiveAsFlow().collect {
-                    it as? Frame.Text ?: throw SocketException (RoutesResponses.commandIsUnknown)
+                    it as? Frame.Text ?: throw SocketException (commandIsUnknown)
 
                     when (it.readText()) {
                         "update" -> {
