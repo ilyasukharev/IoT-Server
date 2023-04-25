@@ -44,7 +44,7 @@ fun Route.personalDataRoutes() {
                     }
 
                     logger.writeLog(dataWasSuccessfullyChanged, "$id", SenderType.ID)
-                    call.respond(HttpStatusCode.Accepted, PersonalResponseData(dataWasSuccessfullyChanged))
+                    call.respond(HttpStatusCode.OK, PersonalResponseData(dataWasSuccessfullyChanged))
                 }
             }
         }

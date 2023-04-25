@@ -36,6 +36,11 @@ object RoutesResponses {
     const val updateIsNull = "Update is null"
     const val accessTokenWasUpdated = "Access token was updated"
     const val deviceListeningStateWasReset = "Device listening state was reset"
+    const val waitingClientSubmit = "Waiting client submit"
+    const val managingReady = "Managing ready"
+    const val submittingRequestReceived = "Submitting request receive"
+    const val deviceWasSubmitted = "Device was submitted"
+    const val deviceWasDeclined = "Device was declined"
 
     //Exceptions
 
@@ -60,6 +65,7 @@ object RoutesResponses {
     const val suchBoardUUIDAlreadyExistsCode = "EE05"
     const val deviceStateHasNotBeenUpdatedCode = "EE06"
     const val suchBoardUUIDIsNotExistsCode = "EE07"
+    const val ownerOfBoardWasNotFoundCode = "EE08"
 
     const val deviceWasNotFound = "Device was not found"
     const val sensorWasNotFound = "Sensor was not found"
@@ -68,6 +74,7 @@ object RoutesResponses {
     const val suchBoardUUIDAlreadyExists = "Such board UUID already exists"
     const val deviceStateHasNotBeenUpdated = "Device state has not been updated"
     const val suchBoardUUIDIsNotExists = "Such board UUID is not exists"
+    const val ownerOfBoardWasNotFound = "Owner of board was not found"
 
     //Token [ET]
     const val tokenIsNotValidOrHasExpiredCode = "ET01"
@@ -93,6 +100,7 @@ object RoutesResponses {
     const val suchDeviceAlreadyRegisteredByUser = "Such device already registered by user"
     const val socketTimeoutResponse = "Socket timeout response"
     const val suchBoardIsListening = "Such board is listening"
+    const val boardWasNotSubmit = "Board was not submit"
 
 
     //OtherException [EO]

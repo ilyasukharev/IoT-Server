@@ -1,4 +1,4 @@
-package com.iotserv.routes.managements.client
+package com.iotserv.routes.managements.client.rest
 
 import com.iotserv.dao.device_definition.DeviceDefinitionManagement
 import com.iotserv.dao.device_structure.DeviceStructure
@@ -42,11 +42,11 @@ fun Route.clientManagementRoutes() {
 
     authenticate("desktop-app") {
         getDevicesDoc()
-        get<Devices> {
+        get<Devices> { device ->
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val id = payload.getClaim("id").asLong()
 
-                userDeviceDao.getAll(id).let { userDevices ->
+                userDeviceDao.getAll(id, device.limit!!, device.offset!!).let { userDevices ->
                     userDevices.map {
                         val deviceInfo = deviceDefinitionDao.getDeviceInfo(it.deviceId)
                         CommonDeviceData(it.deviceId, deviceInfo.deviceName, deviceInfo.deviceDescription)
@@ -119,7 +119,7 @@ fun Route.clientManagementRoutes() {
             }
         }
         getResetDeviceStateDoc()
-        get<Devices.Id.Reset> {device ->
+        get<Devices.Id.Reset> { device ->
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val userId = payload.getClaim("id").asLong()
 

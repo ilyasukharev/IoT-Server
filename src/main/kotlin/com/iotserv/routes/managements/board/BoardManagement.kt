@@ -3,15 +3,19 @@ package com.iotserv.routes.managements.board
 import com.iotserv.dao.users_devices.UserDevice
 import com.iotserv.exceptions.ExposedException
 import com.iotserv.exceptions.SocketException
+import com.iotserv.plugins.stopBoardListening
+import com.iotserv.plugins.traceClientActiveState
 import com.iotserv.plugins.transactException
 import com.iotserv.routes.connections.receiveJsonData
+import com.iotserv.utils.RoutesResponses.boardWasNotSubmit
 import com.iotserv.utils.RoutesResponses.commandIsUnknown
+import com.iotserv.utils.RoutesResponses.managingReady
 import com.iotserv.utils.RoutesResponses.sendingBoardIDAccepted
-import com.iotserv.utils.RoutesResponses.socketTimeoutResponse
 import com.iotserv.utils.RoutesResponses.suchBoardIsListening
 import com.iotserv.utils.RoutesResponses.suchBoardUUIDIsNotExists
 import com.iotserv.utils.RoutesResponses.suchBoardUUIDIsNotExistsCode
 import com.iotserv.utils.RoutesResponses.updateIsNull
+import com.iotserv.utils.RoutesResponses.waitingClientSubmit
 import com.iotserv.utils.logger.Logger
 import com.iotserv.utils.logger.SenderType
 import io.github.crackthecodeabhi.kreds.connection.KredsClient
@@ -24,52 +28,21 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.take
 import org.koin.ktor.ext.inject
-
-private suspend fun stopBoardListening(redis: KredsClient, boardUUID: String) {
-    redis.use { it.del("$boardUUID:isListening") }
-}
-
-private suspend fun traceClientActiveState(channel: Channel<String>, socket: DefaultWebSocketServerSession, boardUUID: String, redis: KredsClient) {
-    val ping = "1"
-    val pong = "0"
-    val timeoutResponse = 15000L
-    val timeoutPing = 15000L
-
-    while(true) {
-        socket.send(ping)
-        var x = 0L
-        var isPong = false
-        while(x < timeoutResponse && !isPong) {
-            channel.tryReceive().getOrNull()?.let {
-                if (it == pong) {
-                    isPong = true
-                }
-                return@let
-            }
-            x += 1000
-            delay(1000)
-        }
-        if (x >= timeoutResponse) {
-            stopBoardListening(redis, boardUUID)
-            socket.send(socketTimeoutResponse)
-            socket.close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, socketTimeoutResponse))
-        }
-        delay(timeoutPing)
-    }
-}
+import java.time.Duration
+import kotlin.system.measureTimeMillis
 
 fun Route.boardManagementRoutes() {
     val logger by inject<Logger>()
     val userDeviceDao by inject<UserDevice>()
     val kredsClient by inject<KredsClient>()
-    lateinit var boardUUID: String
+    var boardUUID = "Unknown board"
 
     route("/management") {
         webSocket("/board") {
             val ip = call.request.origin.remoteHost
 
             try {
-                pingInterval = null
+                pingInterval = Duration.ofSeconds(350)
 
                 incoming.receiveAsFlow().take(1).collect {frame ->
                     (frame as? Frame.Text)?.let {
@@ -88,6 +61,37 @@ fun Route.boardManagementRoutes() {
                     throw ExposedException(suchBoardUUIDIsNotExistsCode, suchBoardUUIDIsNotExists)
                 }
 
+                val clientId = userDeviceDao.getBoardOwner(boardUUID)
+                var submitted = false
+                "$clientId:requestDeviceSubmit".let{key ->
+                    kredsClient.use { redis ->
+                        redis.set(key, "false")
+                        redis.expire(key, 300U)
+                    }
+                }
+
+
+                send(waitingClientSubmit)
+                logger.writeLog(waitingClientSubmit, ip, SenderType.IP_ADDRESS_BOARD)
+
+
+                repeat(300) {
+                    val requestTime = measureTimeMillis {
+                        "$clientId:requestDeviceSubmit".let {key ->
+                            kredsClient.use {redis ->
+                                if (redis.get(key) == "true") {
+                                    println("Submitted")
+                                    submitted = true
+                                    return@repeat
+                                }
+                            }
+                        }
+                    }
+                    delay(1000 - requestTime)
+                }
+
+                if (!submitted) throw SocketException(boardWasNotSubmit)
+
                 kredsClient.use {redis ->
                     "$boardUUID:isListening".let {key ->
                         if (redis.get(key) == "true") {
@@ -97,6 +101,10 @@ fun Route.boardManagementRoutes() {
                         }
                     }
                 }
+
+                pingInterval = null
+                logger.writeLog(managingReady, ip, SenderType.IP_ADDRESS_BOARD)
+                send(managingReady)
 
                 val channel = Channel<String>()
                 launch { traceClientActiveState(channel, this@webSocket, boardUUID, kredsClient) }

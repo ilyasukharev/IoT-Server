@@ -21,7 +21,7 @@ fun Route.changeUserData() {
             }
             response {
                 description("Вернет сообщение 'Data was successfully changed'")
-                responseCode(HttpStatusCode.Accepted)
+                responseCode(HttpStatusCode.OK)
                 responseType<PersonalResponseData>()
             }
             canRespond {

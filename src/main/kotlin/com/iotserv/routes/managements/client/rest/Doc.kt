@@ -1,4 +1,4 @@
-package com.iotserv.routes.managements.client
+package com.iotserv.routes.managements.client.rest
 
 import com.iotserv.dto.ChangeDeviceData
 import com.iotserv.dto.ClientManagementResponseData
@@ -18,6 +18,10 @@ fun Route.getDevicesDoc() {
         get = GetInfo.builder {
             summary("Получение всех пользовательских устройств")
             description("Маршрут предназначен для получения всех пользовательских устройств")
+            parameters = listOf(
+                Parameter("offset", `in` = Parameter.Location.query, schema = TypeDefinition.LONG),
+                Parameter("limit", `in` = Parameter.Location.query, schema = TypeDefinition.INT)
+            )
             response {
                 description("Возвращает список элементов")
                 responseCode(HttpStatusCode.OK)

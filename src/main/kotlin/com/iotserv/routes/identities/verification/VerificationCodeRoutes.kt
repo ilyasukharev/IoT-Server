@@ -44,7 +44,7 @@ fun Route.verificationCodeRoutes() {
                         redis.set("$email:verificationCode", "$generatedCode")
                         redis.expire("$email:verificationCode", 1000U)
                     }
-                    call.respond(HttpStatusCode.Accepted, AuthorizationResponseData(verifyCodeWasSent))
+                    call.respond(HttpStatusCode.OK, AuthorizationResponseData(verifyCodeWasSent))
                 }
 
             }

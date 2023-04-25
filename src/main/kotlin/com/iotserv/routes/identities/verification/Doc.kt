@@ -23,7 +23,7 @@ fun Route.sendingCodeDoc() {
             }
             response {
                 description("Возвращает сообщение 'verify code was sent'")
-                responseCode(HttpStatusCode.Accepted)
+                responseCode(HttpStatusCode.OK)
                 responseType<AuthorizationResponseData>()
             }
             canRespond {

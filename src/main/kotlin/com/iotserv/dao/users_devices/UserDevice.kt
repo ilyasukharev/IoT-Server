@@ -3,6 +3,8 @@ package com.iotserv.dao.users_devices
 import com.iotserv.dto.UserDeviceData
 import com.iotserv.exceptions.ExposedException
 import com.iotserv.utils.DatabaseFactory.dbQuery
+import com.iotserv.utils.RoutesResponses.ownerOfBoardWasNotFound
+import com.iotserv.utils.RoutesResponses.ownerOfBoardWasNotFoundCode
 import com.iotserv.utils.RoutesResponses.userOrDeviceNotFound
 import com.iotserv.utils.RoutesResponses.userOrDeviceNotFoundCode
 import org.jetbrains.exposed.dao.LongEntity
@@ -15,9 +17,10 @@ interface UserDevice {
     suspend fun isBoardUUIDExists(boardUUID: String): Boolean
     suspend fun saveNewDevice(data: UserDeviceData)
     suspend fun isBoardIdExists(boardId: String): Boolean
-    suspend fun getAll(id: Long): List<UserDeviceData>
+    suspend fun getAll(id: Long, limit: Int, offset: Long): List<UserDeviceData>
     suspend fun get(userId: Long, deviceId: Long): UserDeviceData
     suspend fun updateState(deviceId: Long, state: String): Boolean
+    suspend fun getBoardOwner(boardId: String): Long
 }
 
 class UserDeviceImpl : UserDevice {
@@ -59,8 +62,8 @@ class UserDeviceImpl : UserDevice {
             data.boardId
         )
 
-    override suspend fun getAll(id: Long): List<UserDeviceData> = dbQuery {
-        UserDeviceManager.all().map {
+    override suspend fun getAll(id: Long, limit: Int, offset: Long): List<UserDeviceData> = dbQuery {
+        UserDeviceManager.all().limit(limit, offset).orderBy(Pair(UserDevicesTable.deviceId, SortOrder.ASC)).map {
             resultRowToStructure(it)
         }
     }
@@ -81,6 +84,14 @@ class UserDeviceImpl : UserDevice {
         UserDevicesTable.update({UserDevicesTable.deviceId eq deviceId}) {
             it[UserDevicesTable.state] = state
         } > 0
+    }
+
+    override suspend fun getBoardOwner(boardId: String): Long = dbQuery {
+        UserDeviceManager.find {
+                UserDevicesTable.boardId eq boardId
+            }.singleOrNull()?.userId ?: throw ExposedException(
+                ownerOfBoardWasNotFoundCode, ownerOfBoardWasNotFound, listOf("boardId: $boardId")
+            )
     }
 }
 
