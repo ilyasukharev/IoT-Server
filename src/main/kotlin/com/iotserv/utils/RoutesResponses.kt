@@ -13,7 +13,7 @@ object RoutesResponses {
     const val dataWasSuccessfullyChanged = "Data was successfully changed"
     const val incorrectEmailFormat = "Incorrect email format"
     const val incorrectEmailLength = "Incorrect email length"
-    const val incorrectPasswordLength = "Incorrect password length"
+    const val incorrectPasswordFormat = "Incorrect password format"
     const val incorrectCodeLength = "Incorrect code length"
     const val incorrectCodeFormat = "Incorrect code format"
     const val successfullyBoardConnection = "Successfully board connection"
@@ -38,7 +38,7 @@ object RoutesResponses {
     const val deviceListeningStateWasReset = "Device listening state was reset"
     const val waitingClientSubmit = "Waiting client submit"
     const val managingReady = "Managing ready"
-    const val submittingRequestReceived = "Submitting request receive"
+    const val submittingRequestReceived = "Submitting request received"
     const val deviceWasSubmitted = "Device was submitted"
     const val deviceWasDeclined = "Device was declined"
 
@@ -101,14 +101,15 @@ object RoutesResponses {
     const val socketTimeoutResponse = "Socket timeout response"
     const val suchBoardIsListening = "Such board is listening"
     const val boardWasNotSubmit = "Board was not submit"
+    const val boardWasDeclined = "Board was declined"
 
 
     //OtherException [EO]
     const val deviceIsNotListeningCode = "EO01"
-    const val arrivedStateOfTypeIsNotCorrectCode = "EO02"
+    const val arrivedTypeOfStateIsNotCorrectCode = "EO02"
 
     const val deviceIsNotListening = "Device is not listening"
-    const val arrivedStateOfTypeIsNotCorrect = "Arrived state of type is not correct"
+    const val arrivedTypeOfStateIsNotCorrect = "Arrived state of type is not correct"
 
 
 

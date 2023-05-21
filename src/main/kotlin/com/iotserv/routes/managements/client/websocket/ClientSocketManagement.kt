@@ -28,25 +28,41 @@ import org.koin.ktor.ext.inject
 import java.time.Duration
 import kotlin.system.measureTimeMillis
 
+private suspend fun setState(state: String, clientId: Long, redis: KredsClient) {
+    "$clientId:requestDeviceSubmit".let{key ->
+        redis.use { redis ->
+            redis.set(key, state)
+            redis.expire(key, 90U)
+        }
+    }
+}
 
 private suspend fun deviceSubmitting(clientId: Long, redis: KredsClient, channel: Channel<String>, logger: Logger, socket: DefaultWebSocketServerSession) {
     repeat(90) {
         val time = measureTimeMillis {
-            val response = channel.tryReceive().getOrNull()
-            if (response == "submit")  {
-                "$clientId:requestDeviceSubmit".let{key ->
-                    redis.use { redis ->
-                        redis.set(key, "true")
-                        redis.expire(key, 90U)
+            var response = channel.tryReceive().getOrNull()
+
+            if (response != null) {
+                redis.use { redis ->
+                    if (redis.get("$clientId:requestDeviceSubmit") != "null") {
+                        response = null
                     }
                 }
+            }
+
+            if (response == "submit")  {
+                setState("accepted", clientId, redis)
+
                 socket.send(deviceWasSubmitted)
                 logger.writeLog(deviceWasSubmitted, "$clientId", SenderType.ID)
             }
             else if (response == "decline") {
+                setState("declined", clientId, redis)
+
                 socket.send(deviceWasDeclined)
                 logger.writeLog(deviceWasDeclined, "$clientId", SenderType.ID)
             }
+
         }
         delay(1000 - time)
     }
@@ -92,7 +108,7 @@ fun Route.clientSocketManagement() {
                                         if (!clientResponseChanel.isEmpty) {
                                             clientResponseChanel = Channel()
                                         }
-                                        redis.del(key)
+                                        redis.set(key, "null")
                                         launch { deviceSubmitting(clientId, kredsClient, clientResponseChanel, logger, this@webSocket) }
                                         send(submittingRequestReceived)
                                         logger.writeLog(submittingRequestReceived, "$clientId", SenderType.ID)

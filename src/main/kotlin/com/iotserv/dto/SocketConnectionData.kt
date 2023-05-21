@@ -3,11 +3,6 @@ package com.iotserv.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SocketConnectionResponseData(
-    val message: String,
-)
-
-@Serializable
 data class BoardConnectionData (
     val boardIdentificationData: BoardIdentificationData? = null,
     val controlDeviceData: ControlDeviceData? = null,

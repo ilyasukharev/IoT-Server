@@ -1,8 +1,8 @@
 package com.iotserv.utils
 
 import com.iotserv.exceptions.OtherException
-import com.iotserv.utils.RoutesResponses.arrivedStateOfTypeIsNotCorrect
-import com.iotserv.utils.RoutesResponses.arrivedStateOfTypeIsNotCorrectCode
+import com.iotserv.utils.RoutesResponses.arrivedTypeOfStateIsNotCorrect
+import com.iotserv.utils.RoutesResponses.arrivedTypeOfStateIsNotCorrectCode
 
 object DeviceSensorsHandler {
     private const val tInteger = "Integer"
@@ -51,7 +51,7 @@ object DeviceSensorsHandler {
 
     fun getUpdateState (type: String, sensorState: String, sensor: String, deviceState: String) : String {
         if (!isTypeCorrect(type, sensorState))
-            throw OtherException(arrivedStateOfTypeIsNotCorrectCode, arrivedStateOfTypeIsNotCorrect, listOf("state: $sensorState"))
+            throw OtherException(arrivedTypeOfStateIsNotCorrectCode, arrivedTypeOfStateIsNotCorrect, listOf("state: $sensorState"))
 
         deserializeToMap(deviceState).apply {
             this.forEach {note ->

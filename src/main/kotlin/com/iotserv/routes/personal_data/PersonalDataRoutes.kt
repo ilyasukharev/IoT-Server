@@ -32,7 +32,7 @@ fun Route.personalDataRoutes() {
         route("/account/change") {
             changeUserData()
 
-            post {
+            put {
                 val data = call.receive<PersonalData>()
 
                 call.principal<JWTPrincipal>()!!.payload.let { payload ->
@@ -52,7 +52,7 @@ fun Route.personalDataRoutes() {
 
     route("/account/change/password") {
         changeUserPassword()
-        post {
+        put {
             val data = call.receive<PersonalData>()
             val clientIp = call.request.origin.remoteHost
 

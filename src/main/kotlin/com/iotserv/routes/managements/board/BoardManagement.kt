@@ -7,6 +7,7 @@ import com.iotserv.plugins.stopBoardListening
 import com.iotserv.plugins.traceClientActiveState
 import com.iotserv.plugins.transactException
 import com.iotserv.routes.connections.receiveJsonData
+import com.iotserv.utils.RoutesResponses.boardWasDeclined
 import com.iotserv.utils.RoutesResponses.boardWasNotSubmit
 import com.iotserv.utils.RoutesResponses.commandIsUnknown
 import com.iotserv.utils.RoutesResponses.managingReady
@@ -79,10 +80,14 @@ fun Route.boardManagementRoutes() {
                     val requestTime = measureTimeMillis {
                         "$clientId:requestDeviceSubmit".let {key ->
                             kredsClient.use {redis ->
-                                if (redis.get(key) == "true") {
-                                    println("Submitted")
+                                val res = redis.get(key)
+
+                                if (res == "accepted") {
                                     submitted = true
                                     return@repeat
+                                }
+                                else if (res == "declined") {
+                                    throw SocketException(boardWasDeclined)
                                 }
                             }
                         }
@@ -126,14 +131,13 @@ fun Route.boardManagementRoutes() {
                     }
                 }
             } catch (e: SocketException) {
-                stopBoardListening(kredsClient, boardUUID)
                 transactException(e.message!!, ip, logger, this)
             } catch (e: ExposedException){
-                stopBoardListening(kredsClient, boardUUID)
                 transactException(e.message, ip, logger, this)
             } catch (e: Exception) {
-                stopBoardListening(kredsClient, boardUUID)
                 transactException(e.message ?: "", ip, logger, this)
+            } finally {
+                stopBoardListening(kredsClient, boardUUID)
             }
         }
     }

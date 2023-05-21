@@ -229,14 +229,14 @@ fun Route.connectionRoutes() {
                                             redis.set("$boardUUID:clientID", "$id")
                                             redis.expire("$boardUUID:clientID", 3690U)
                                             logger.writeLog(boardWasFound, "$id", SenderType.ID)
-                                            sendSerialized(SocketConnectionResponseData(boardWasFound))
+                                            send(boardWasFound)
                                         }
                                     }
                                 }
                                 throw SocketException(clientsWasNotConnected)
                             }
 
-                            else -> sendSerialized(SocketConnectionResponseData(unknownSocketCommand))
+                            else -> send(unknownSocketCommand)
                         }
                     }
                 } catch(e: SocketException) {

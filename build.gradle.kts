@@ -8,6 +8,7 @@ val postgresql_version: String by project
 val kreds_version: String by project
 val koin_ktor_version: String by project
 val apache_email_version: String by project
+val tomcat_version: String by project
 
 plugins {
     application
@@ -40,6 +41,10 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/io.ktor/ktor-server-tomcat
+// https://mvnrepository.com/artifact/io.ktor/ktor-server-jetty
+    implementation("io.ktor:ktor-server-jetty:1.3.2-1.4-M2")
+
     implementation ("io.bkbn:kompendium-resources:latest.release")
     implementation("io.bkbn:kompendium-core:latest.release")
     implementation("org.apache.commons:commons-email:$apache_email_version")
@@ -58,7 +63,6 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-resources:$ktor_version")
     implementation("io.ktor:ktor-server-host-common-jvm:2.2.1")

@@ -47,12 +47,12 @@ GET http://192.168.0.107:8080/token/update
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDgwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwODAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjc5MjQxODIxfQ.ZLo1-K9eTps7N1DAaj8XoPUPY4T5oLoKb9ICxbU_PxI
 
 ###
-POST http://192.168.0.107:8000/management/user/devices/1/change
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMTkyLjE2OC4wLjEwNzo4MDAwLyIsImlzcyI6Imh0dHA6Ly8xOTIuMTY4LjAuMTA3OjgwMDAvIiwiaWQiOjEsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjgwNjI1OTY3fQ.BEIUX2Ywea4UP5Kod7o60Hzmp0GeQHEJbTDACb8MQKo
+PUT http://localhost:8000/management/user/devices/1/change
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMC4wLjAuMDo4MDAwLyIsImlzcyI6Imh0dHA6Ly8wLjAuMC4wOjgwMDAvIiwiaWQiOjIsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNjg0NzQzNjUxfQ.I8VVisah4D7rHLZIh2Ulk3eN2lwrF7vy2NgbLgRowHw
 Content-Type: application/json
 
 {
-  "sensor": "Мотор вверх",
+  "sensor": "a1",
   "state": "false"
 }
 

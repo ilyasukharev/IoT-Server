@@ -31,7 +31,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
-import io.ktor.server.resources.post
+import io.ktor.server.resources.put
 
 fun Route.clientManagementRoutes() {
     val logger by inject<Logger>()
@@ -79,7 +79,7 @@ fun Route.clientManagementRoutes() {
         }
 
         getChangeDeviceDoc()
-        post<Devices.Id.Change> { device ->
+        put<Devices.Id.Change> { device ->
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val userId = payload.getClaim("id").asLong()
                 val data = call.receive<ChangeDeviceData>()

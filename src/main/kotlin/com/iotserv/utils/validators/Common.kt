@@ -2,10 +2,13 @@ package com.iotserv.utils.validators
 
 import com.iotserv.utils.RoutesResponses.incorrectEmailFormat
 import com.iotserv.utils.RoutesResponses.incorrectEmailLength
-import com.iotserv.utils.RoutesResponses.incorrectPasswordLength
+import com.iotserv.utils.RoutesResponses.incorrectPasswordFormat
+import java.util.regex.Pattern
 
 fun isEmailAvailable (email: String): String? {
-    return if (!email.contains("@") || !email.contains(".")) {
+    val emailPattern = Pattern.compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+
+    return if (!emailPattern.matcher(email).matches()) {
         incorrectEmailFormat
     }
     else if (email.length > 50) {
@@ -15,6 +18,8 @@ fun isEmailAvailable (email: String): String? {
 }
 
 fun isPasswordAvailable(pwd: String) : String? {
-    return if (pwd.length < 8 || pwd.length > 50) incorrectPasswordLength
-    else                                          null
+    val passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,49}$")
+
+    return if (!passwordPattern.matcher(pwd).matches()) incorrectPasswordFormat
+    else                                                null
 }
