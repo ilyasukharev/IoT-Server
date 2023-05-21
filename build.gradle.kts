@@ -22,8 +22,8 @@ version = "0.0.1"
 application {
     mainClass.set("com.iotserv.ApplicationKt")
 
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+//    val isDevelopment: Boolean = project.ext.has("development")
+//    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 repositories {
@@ -41,9 +41,7 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/io.ktor/ktor-server-tomcat
-// https://mvnrepository.com/artifact/io.ktor/ktor-server-jetty
-    implementation("io.ktor:ktor-server-jetty:1.3.2-1.4-M2")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
 
     implementation ("io.bkbn:kompendium-resources:latest.release")
     implementation("io.bkbn:kompendium-core:latest.release")

@@ -4,9 +4,7 @@ import com.iotserv.plugins.*
 import com.iotserv.utils.DatabaseFactory
 import io.ktor.server.application.*
 
-
-fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
-
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
     configureKoin()
