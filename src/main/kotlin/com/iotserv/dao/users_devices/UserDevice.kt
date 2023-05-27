@@ -63,7 +63,9 @@ class UserDeviceImpl : UserDevice {
         )
 
     override suspend fun getAll(id: Long, limit: Int, offset: Long): List<UserDeviceData> = dbQuery {
-        UserDeviceManager.all().limit(limit, offset).orderBy(Pair(UserDevicesTable.deviceId, SortOrder.ASC)).map {
+        UserDeviceManager.find {
+            UserDevicesTable.id eq id
+        }.limit(limit, offset).orderBy(Pair(UserDevicesTable.deviceId, SortOrder.ASC)).map {
             resultRowToStructure(it)
         }
     }
