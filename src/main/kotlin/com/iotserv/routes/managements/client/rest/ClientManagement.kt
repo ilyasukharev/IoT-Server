@@ -62,7 +62,6 @@ fun Route.clientManagementRoutes() {
         }
         getDetailDeviceDoc()
         get<Devices.Id> { device ->
-
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val userId = payload.getClaim("id").asLong()
 
