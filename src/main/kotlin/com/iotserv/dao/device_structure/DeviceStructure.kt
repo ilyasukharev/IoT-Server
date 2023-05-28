@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 interface DeviceStructure {
     suspend fun addSensor(data: DeviceStructureData)
     suspend fun getSensorType(deviceId: Long, sensorName: String): String
+    suspend fun getAllStructure(deviceId: Long): Map<String, String>
 }
 
 class DeviceStructureIMPL : DeviceStructure {
@@ -31,6 +32,17 @@ class DeviceStructureIMPL : DeviceStructure {
         }.limit(1).singleOrNull()?.sensorStateType
             ?: throw ExposedException(sensorWasNotFoundCode, sensorWasNotFound, listOf(sensorName))
     }
+
+    override suspend fun getAllStructure(deviceId: Long): Map<String, String> = dbQuery {
+        val map = HashMap<String, String>()
+
+        DeviceStructureManager.find {
+            DeviceStructureTable.deviceId eq deviceId
+        }.map { map.put(it.sensorName, it.sensorStateType) }
+
+        map
+    }
+
 }
 
 class DeviceStructureManager (id: EntityID<Long>): LongEntity(id) {

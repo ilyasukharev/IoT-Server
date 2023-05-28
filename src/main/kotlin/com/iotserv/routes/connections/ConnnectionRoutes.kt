@@ -19,6 +19,7 @@ import com.iotserv.utils.RoutesResponses.clientConnected
 import com.iotserv.utils.RoutesResponses.clientsWasNotConnected
 import com.iotserv.utils.RoutesResponses.commandIsUnknown
 import com.iotserv.utils.RoutesResponses.dataWereSuccessfullyWrote
+import com.iotserv.utils.RoutesResponses.deviceStructureError
 import com.iotserv.utils.RoutesResponses.searchingTheClient
 import com.iotserv.utils.RoutesResponses.sendingBoardIDAccepted
 import com.iotserv.utils.RoutesResponses.sendingSettingsAccepted
@@ -162,7 +163,10 @@ fun Route.connectionRoutes() {
 
                             val data = receiveJsonData(this, false, logger, ip, null).controlDeviceData!!
 
+                            var isUnique = false;
+
                             if (!deviceDefinitionManagementDao.isExists(data.deviceName)) {
+                                isUnique = true;
                                 deviceDefinitionManagementDao.addNewDevice(
                                     DeviceDefinitionData (data.deviceName, data.deviceDescription, data.sensorsList.size)
                                 ).let { deviceId ->
@@ -180,7 +184,16 @@ fun Route.connectionRoutes() {
                                 throw SocketException(suchDeviceAlreadyRegisteredByUser)
                             }
 
-                            val state = DeviceSensorsHandler.serializeWithDefaultValues(data.sensorsList, data.statesTypesList)
+                            val state = if (isUnique) {
+                                DeviceSensorsHandler.serializeWithDefaultValues(data.sensorsList, data.statesTypesList)
+                            } else {
+                                val map = deviceStructureDao.getAllStructure(deviceId)
+                                if (map.isEmpty()) throw SocketException(deviceStructureError);
+
+                                DeviceSensorsHandler.serializeWithDefaultValues(
+                                    map.keys.toList(), map.values.toList()
+                                )
+                            }
 
                             userDeviceDao.saveNewDevice(UserDeviceData(userId, deviceId, state, boardUUID))
 

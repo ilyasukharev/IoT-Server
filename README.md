@@ -121,4 +121,5 @@
 |        5         | Such device already registered by user  |        Устройство уже зарегистрировано пользователем        |
 |        6         |         Socket timeout response         |        Превышения времени ожидания ответа от сокета         |
 |        7         |         Such board is listening         |                  Плата уже прослушивается                   |
-|        8         |           boardWasNotSubmit             |             Плата не была подтверждена клиентом             |
+|        8         |            boardWasNotSubmit            |             Плата не была подтверждена клиентом             |
+|        9         |          deviceStructureError           |     Не найдено ни одного датчика указанного устройства      |

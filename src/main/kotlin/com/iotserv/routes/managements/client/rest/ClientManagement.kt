@@ -122,7 +122,7 @@ fun Route.clientManagementRoutes() {
             }
         }
         getResetDeviceStateDoc()
-        post <Devices.Reset> { device ->
+        post <Devices.Reset> {
             call.principal<JWTPrincipal>()!!.payload.let { payload ->
                 val userId = payload.getClaim("id").asLong()
                 val requestData = call.receive<BoardIdData>()

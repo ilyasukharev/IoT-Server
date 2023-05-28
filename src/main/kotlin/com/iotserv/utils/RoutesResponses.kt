@@ -102,6 +102,7 @@ object RoutesResponses {
     const val suchBoardIsListening = "Such board is listening"
     const val boardWasNotSubmit = "Board was not submit"
     const val boardWasDeclined = "Board was declined"
+    const val deviceStructureError = "Device structure error"
 
 
     //OtherException [EO]
