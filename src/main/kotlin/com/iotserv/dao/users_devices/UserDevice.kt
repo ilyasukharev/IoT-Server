@@ -3,6 +3,8 @@ package com.iotserv.dao.users_devices
 import com.iotserv.dto.UserDeviceData
 import com.iotserv.exceptions.ExposedException
 import com.iotserv.utils.DatabaseFactory.dbQuery
+import com.iotserv.utils.RoutesResponses.deviceWasNotFound
+import com.iotserv.utils.RoutesResponses.deviceWasNotFoundCode
 import com.iotserv.utils.RoutesResponses.ownerOfBoardWasNotFound
 import com.iotserv.utils.RoutesResponses.ownerOfBoardWasNotFoundCode
 import com.iotserv.utils.RoutesResponses.userOrDeviceNotFound
@@ -17,8 +19,8 @@ interface UserDevice {
     suspend fun saveNewDevice(data: UserDeviceData)
     suspend fun isBoardIdExists(boardId: String): Boolean
     suspend fun getAll(id: Long, limit: Int, offset: Long): List<UserDeviceData>
-    suspend fun get(userId: Long, deviceId: Long): UserDeviceData
-    suspend fun updateState(deviceId: Long, state: String): Boolean
+    suspend fun getByBoardId(userId: Long, boardId: String): UserDeviceData
+    suspend fun updateState(boardId: String, state: String): Boolean
     suspend fun getBoardOwner(boardId: String): Long
 }
 
@@ -64,20 +66,19 @@ class UserDeviceImpl : UserDevice {
         }
     }
 
-    override suspend fun get(userId: Long, deviceId: Long): UserDeviceData = dbQuery {
+    override suspend fun getByBoardId(userId: Long, boardId: String): UserDeviceData = dbQuery {
         UserDeviceManager.find {
-            (UserDevicesTable.userId eq userId) and (UserDevicesTable.deviceId eq deviceId)
-        }.limit(1).singleOrNull()?.let {
-            UserDeviceData(it.userId, it.deviceId, it.state, it.boardId)
-        } ?: throw ExposedException (
-            userOrDeviceNotFoundCode,
-            userOrDeviceNotFound,
-            listOf("user: $userId", "device: $deviceId")
-        )
+            (UserDevicesTable.userId eq userId) and (UserDevicesTable.boardId eq boardId)
+        }.limit(1).singleOrNull()?.let { UserDeviceData(it.userId, it.deviceId, it.state, it.boardId) }
+            ?: throw ExposedException(
+                userOrDeviceNotFoundCode,
+                userOrDeviceNotFound,
+                listOf("user: $userId", "boardId: $boardId")
+            )
     }
 
-    override suspend fun updateState(deviceId: Long, state: String): Boolean = dbQuery {
-        UserDevicesTable.update({UserDevicesTable.deviceId eq deviceId}) {
+    override suspend fun updateState(boardId: String, state: String): Boolean = dbQuery {
+        UserDevicesTable.update({UserDevicesTable.boardId eq boardId}) {
             it[UserDevicesTable.state] = state
         } > 0
     }

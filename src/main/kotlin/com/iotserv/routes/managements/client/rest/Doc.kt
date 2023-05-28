@@ -1,9 +1,11 @@
 package com.iotserv.routes.managements.client.rest
 
+import com.iotserv.dto.BoardIdData
 import com.iotserv.dto.ChangeDeviceData
 import com.iotserv.dto.ClientManagementResponseData
 import com.iotserv.exceptions.CustomExceptionsData
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
@@ -42,9 +44,13 @@ fun Route.getDetailDeviceDoc() {
         parameters = listOf (
             Parameter(name="id", `in` = Parameter.Location.path, schema = TypeDefinition.LONG)
         )
-        get = GetInfo.builder {
+        post = PostInfo.builder {
             summary("Получение информации об устройстве")
             description("Получение детальной информации об устройстве")
+            request {
+                description("Идентификатор платы")
+                requestType<BoardIdData>()
+            }
             response {
                 description("Возвращает информацию об устройстве")
                 responseCode(HttpStatusCode.OK)
@@ -88,14 +94,18 @@ fun Route.getChangeDeviceDoc() {
 }
 
 fun Route.getResetDeviceStateDoc() {
-    install(NotarizedResource<Devices.Id.Reset>()) {
+    install(NotarizedResource<Devices.Reset>()) {
         tags = setOf("Управление клиентскими устройствами")
         parameters = listOf (
             Parameter(name="id", `in` = Parameter.Location.path, schema = TypeDefinition.LONG)
         )
-        get = GetInfo.builder {
+        post = PostInfo.builder {
             summary("Сброс состояния активности устройства")
             description("Принудительное прерывание состояния активного прослушивания устройства сервером")
+            request {
+                description("Идентификатор платы")
+                requestType<BoardIdData>()
+            }
             response {
                 description("Возвращает сообщение 'Device listening state was reset'")
                 responseCode(HttpStatusCode.OK)

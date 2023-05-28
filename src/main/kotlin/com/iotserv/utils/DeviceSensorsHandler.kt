@@ -24,6 +24,17 @@ object DeviceSensorsHandler {
         }
         return state.toString()
     }
+    fun updateToDefaultValues(map: HashMap<String, String>): String{
+        val cpy = HashMap<String, String>()
+        map.forEach { (k, v) ->
+            if (v.toIntOrNull() != null || v.toBooleanStrictOrNull() != null) {
+                if (v.toIntOrNull() == null)   cpy[k] = "false"
+                else                           cpy[k] = "0"
+            }
+            else cpy[v] = "null"
+        }
+        return serializeMapToString(cpy)
+    }
 
     fun deserializeToMap (state: String): HashMap<String, String> {
         val map = HashMap<String, String>()

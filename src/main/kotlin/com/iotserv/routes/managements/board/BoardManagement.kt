@@ -7,6 +7,7 @@ import com.iotserv.plugins.stopBoardListening
 import com.iotserv.plugins.traceClientActiveState
 import com.iotserv.plugins.transactException
 import com.iotserv.routes.connections.receiveJsonData
+import com.iotserv.utils.DeviceSensorsHandler
 import com.iotserv.utils.RoutesResponses.boardWasDeclined
 import com.iotserv.utils.RoutesResponses.boardWasNotSubmit
 import com.iotserv.utils.RoutesResponses.commandIsUnknown
@@ -104,6 +105,14 @@ fun Route.boardManagementRoutes() {
                         } else {
                             redis.set(key, "true")
                         }
+                    }
+                }
+
+                userDeviceDao.getByBoardId(clientId, boardUUID).let{data->
+                    val sensorsMap = DeviceSensorsHandler.deserializeToMap(data.state)
+
+                    DeviceSensorsHandler.updateToDefaultValues(sensorsMap).let {newState ->
+                        userDeviceDao.updateState(boardUUID, newState)
                     }
                 }
 
