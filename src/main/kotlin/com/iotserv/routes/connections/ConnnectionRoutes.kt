@@ -176,7 +176,7 @@ fun Route.connectionRoutes() {
 
                             val deviceId = deviceDefinitionManagementDao.getDeviceId(data.deviceName)
 
-                            if (userDeviceDao.isExists(userId, deviceId)) {
+                            if (userDeviceDao.isBoardUUIDExists(boardUUID)) {
                                 throw SocketException(suchDeviceAlreadyRegisteredByUser)
                             }
 

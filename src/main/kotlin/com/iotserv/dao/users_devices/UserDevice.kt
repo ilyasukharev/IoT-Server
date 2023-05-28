@@ -13,7 +13,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.*
 
 interface UserDevice {
-    suspend fun isExists(userId: Long, deviceId: Long): Boolean
     suspend fun isBoardUUIDExists(boardUUID: String): Boolean
     suspend fun saveNewDevice(data: UserDeviceData)
     suspend fun isBoardIdExists(boardId: String): Boolean
@@ -24,11 +23,6 @@ interface UserDevice {
 }
 
 class UserDeviceImpl : UserDevice {
-    override suspend fun isExists(userId: Long, deviceId: Long): Boolean = dbQuery {
-        UserDeviceManager.find {
-            (UserDevicesTable.userId eq userId) and (UserDevicesTable.deviceId eq deviceId)
-        }.limit(1).singleOrNull() != null
-    }
 
     /**
      * Important info: the boardUUID is unique.
